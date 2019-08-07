@@ -13,11 +13,37 @@
     <!--<result column="totalTime" property="totaltime" jdbcType="INTEGER" />-->
   <!--</resultMap>-->
 
-    <!--h获取全部记录-->
-  <select id="getGoodAll" resultType="com.gxu.tour.entity.Goods" >
-      	SELECT *
-		FROM goods
+    <resultMap id="BaseResultMap" type="com.gxu.tour.entity.SearchNumByMonth" >
+
+    <id column="SearchNumByMonth_id" property="month" jdbcType="INTEGER" />
+    <result column="SearchNumByMonth_num" property="searchNum" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--指定月份统计数据，统计该月有多少人进行了搜索-->
+  <select id="getSearchDataByTime" resultType="java.lang.Integer" >
+      	SELECT count(1)
+		FROM  syd_tourshow_search_log
+        where create_time between #{start} and #{stop}
   </select>
 
+    <!--把每个月的搜索量结果数据，更新到结果表-->
+    <update id="UpdateSearchData" parameterType="java.util.List">
+        <foreach collection="searchNumByMonths" item="item" index="index" open="" close="" separator=";">
+            UPDATE SearchNumByMonth_Result
+            <set>
+                SearchNumByMonth_num =#{item.searchNum}
+            </set>
+            <where>
+                SearchNumByMonth_id = #{item.month}
+            </where>
+        </foreach>
+    </update>
+
+    <!--获取用户搜索日志月份结果表数据-->
+    <select id="GetSearchDataForShow" resultMap="BaseResultMap" >
+      	SELECT *
+		FROM  SearchNumByMonth_Result
+        limit #{num}
+  </select>
 
 </mapper>
