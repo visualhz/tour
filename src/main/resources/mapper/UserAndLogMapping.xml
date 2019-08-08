@@ -3,67 +3,77 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gxu.tour.mapper.UserAndLogMapping">
-    <resultMap id="userResult" type="User">
-        <id property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
-        <result property="userSex" column="user_sex"/>
-        <result property="userAge" column="user_age"/>
-        <result property="province" column="province"/>
+
+    <resultMap id="fromTerminalResult" type="FromTerminal">
+        <result property="year" column="year"/>
+        <result property="month" column="month"/>
+        <result property="MP" column="MP"/>
+        <result property="PC" column="PC"/>
+        <result property="IM" column="IM"/>
     </resultMap>
 
-    <resultMap id="logResult" type="Log">
-        <id property="logId" column="log_id"/>
-        <result property="userId" column="user_id" javaType="Integer"/>
-        <result property="productType" column="product_type"/>
-        <result property="productName" column="product_name"/>
-        <result property="behaviorType" column="behavior_type"/>
-        <result property="fromTerminal" column="from_terminal"/>
-        <result property="createTime" column="create_time"/>
-    </resultMap>
 
-    <resultMap id="identityResult" type="Identity">
+    <resultMap id="sexByMonthResult" type="Sex">
+        <result property="year" column="year"/>
+        <result property="month" column="month"/>
+        <result property="manNum" column="man_num"/>
+        <result property="womenNum" column="women_num"/>
         <result property="total" column="total"/>
-        <result property="mNumber" column="mnumber"/>
-        <result property="wNumber" column="wnumber"/>
-        <result property="yearAndMonth" column="mon"/>
     </resultMap>
 
 
 
-    <!--    public User getUserById(Integer id);-->
-    <select id="getUserById" resultType="com.gxu.tour.entity.User">
-    select * from user where user_id=#{id}
-  </select>
-
-    <!--    public List<User> getAllUser();-->
-    <select id="getAllUser" resultMap="userResult">
-        select * from  user
+    <!-- fromTerminalResult查询出访问入口的人数
+     '0 | pc端 ; 1 | 小程序端 ； 2 | 一体机 ；'
+     -->
+    <select id="getFromTerminalStatistic" resultMap="fromTerminalResult">
+        SELECT year, month, PC, MP, IM  FROM from_terminal_result a
+        WHERE NOT EXISTS( SELECT * FROM from_terminal_result b
+        WHERE a.`year` = b.`year` AND a.`month` = b.`month`
+        AND a.`create_time` &lt; b.`create_time`) ORDER BY a.`year`, a.`month` DESC LIMIT 0,1;
     </select>
 
-    <!--    查询单个用户-->
-    <select id="getLogById" resultMap="logResult">
-        select * from log where log_id=#{id}
-    </select>
+    <select id="getSexByMonthStatistic" resultMap="sexByMonthResult">
 
-    <!--    public SoucreOfAccess  geNumbersOfAccessSource(@Param("year")Integer year, @Param("month") Integer month);-->
-    <select id="getNumbersOfAccessSource" resultType="SoucreOfAccess">
-        SELECT SUM(CASE WHEN from_terminal =1 THEN 1 ELSE 0 END) MP,
-	        SUM(CASE WHEN from_terminal=0 THEN 1 ELSE 0 END) PC
-            FROM log WHERE  YEAR(create_time)=#{year} AND MONTH(create_time)=#{month};
+        SELECT year, month, man_num, women_num, total FROM sexByMonth a
+        WHERE NOT EXISTS(SELECT * FROM sexByMonth b
+        WHERE a.`year` =b.`year` AND a.`month` = b.`month` AND a.`create_time`  &lt; b.`create_time`)
+        ORDER BY YEAR, MONTH LIMIT 0,12;
     </select>
 
 
-    <!--    查询和统计最近一年每个月的身份统计数据
-            mnumber性别为男的数量
-            wnumber性别为女性的数量
-            total总人数
-            mon年份和月份
-    -->
-    <select id="getVisitorIdentityStatistics" resultMap="identityResult">
-    SELECT COUNT(*) AS total,
-    SUM(IF( b.`user_sex`='男', 1,0)) AS 'mnumber',
-    SUM(IF( b.`user_sex`='女', 1,0)) AS 'wnumber',
-    a.`create_time`  AS 'mon' FROM log AS a, user AS b
-    WHERE DATE_FORMAT(a.create_time, '%Y-%m') > DATE_FORMAT(DATE_SUB("2017-01-02 09:10:23", INTERVAL 12 MONTH), '%Y-%m') AND a.`user_id` = b.`user_id` GROUP BY mon;
-    </select>
+
+    <!--    从syd_tourshow_watch_log中查出当月的浏览数据
+            插入到from_terminal_result表中。
+            -->
+    <insert id="refreshFromTerminalStatistic">
+        INSERT INTO from_terminal_result(YEAR,MONTH,PC,MP,IM)
+        SELECT YEAR(create_time)AS 'year',
+        MONTH(create_time) AS 'mon',
+        SUM(IF (from_terminal=0,1,0)) AS 'PC',
+        SUM(IF (from_terminal=1,1,0)) AS 'MP',
+        SUM(IF (from_terminal=2,1,0)) AS 'IM'
+        FROM syd_tourshow_watch_log
+        <if test="choose==true">
+            WHERE YEAR(create_time)=YEAR(CURRENT_TIMESTAMP) AND MONTH(create_time)=MONTH (CURRENT_TIMESTAMP )
+        </if>
+        GROUP BY MONTH(create_time),YEAR(create_time);
+
+    </insert>
+
+    <insert id="refreshSexByMonthStatistic">
+    INSERT INTO sexByMonth(YEAR,MONTH,man_num,women_num,total)
+    SELECT YEAR(lo.`create_time`) AS 'year',
+    MONTH(lo.`create_time`) AS 'month',
+    SUM(IF(us.`sex`=0,1,0)) AS 'man',
+    SUM(IF(us.`sex`=1,1,0)) AS 'women',
+    COUNT(*) AS 'total'
+    FROM syd_tourshow_user us
+    INNER JOIN `syd_tourshow_watch_log` lo ON us.`uid` = lo.`uid`
+    WHERE DATE_FORMAT(lo.`create_time`,'%Y-%m') > DATE_FORMAT(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 12 MONTH),'%Y-%m')
+    GROUP BY YEAR, MONTH;
+    </insert>
+
+
+
 </mapper>

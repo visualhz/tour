@@ -1,78 +1,119 @@
 package com.gxu.tour.entity;
 
-/**
- * 用户实体类
- */
+import java.util.Date;
 
 public class User {
-
-    private Integer userId;
-    private String userName;
-    private String userSex;
-    private int userAge;
-    private String province;
+    private int id;
+    private String uId;
+    private String nickName;
+    private String face;
+    private int sex;
+    private String city;
+    private String openId;
+    private String unionId;
+    private Date createTime;
 
     public User()
     {
         super();
     }
 
-    public User(Integer userId, String userName, String userSex, int userAge, String province) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userSex = userSex;
-        this.userAge = userAge;
-        this.province = province;
+    public User(int id, String uId, String nickName, String face, int sex, String city, String openId, String unionId, Date createTime) {
+        this.id = id;
+        this.uId = uId;
+        this.nickName = nickName;
+        this.face = face;
+        this.sex = sex;
+        this.city = city;
+        this.openId = openId;
+        this.unionId = unionId;
+        this.createTime = createTime;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getuId() {
+        return uId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setuId(String uId) {
+        this.uId = uId;
     }
 
-    public String getUserSex() {
-        return userSex;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setUserSex(String userSex) {
-        this.userSex = userSex;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public int getUserAge() {
-        return userAge;
+    public String getFace() {
+        return face;
     }
 
-    public void setUserAge(int userAge) {
-        this.userAge = userAge;
+    public void setFace(String face) {
+        this.face = face;
     }
 
-    public String getProvince() {
-        return province;
+    public int getSex() {
+        return sex;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", userSex='" + userSex + '\'' +
-                ", userAge=" + userAge +
-                ", province='" + province + '\'' +
+                "id=" + id +
+                ", uId='" + uId + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", face='" + face + '\'' +
+                ", sex=" + sex +
+                ", city='" + city + '\'' +
+                ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
+                ", createTime=" + createTime +
                 '}';
     }
 }

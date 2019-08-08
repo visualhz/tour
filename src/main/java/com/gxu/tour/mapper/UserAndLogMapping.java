@@ -1,28 +1,28 @@
 package com.gxu.tour.mapper;
 
-import com.gxu.tour.entity.Identity;
-import com.gxu.tour.entity.Log;
-import com.gxu.tour.entity.SoucreOfAccess;
-import com.gxu.tour.entity.User;
+import com.gxu.tour.entity.FromTerminal;
+import com.gxu.tour.entity.Sex;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface UserAndLogMapping {
 
+    // 查询当月的访问来源统计数据
+    public FromTerminal getFromTerminalStatistic();
 
-    //    获取单个用户
-    public User getUserById(Integer id);
+    /**
+     * 更新访问来源数据
+     *
+     * @param choose true:更新当月的数据
+     *               false:重新统计，更新全部数据。
+     * @return 返回影响的行数
+     */
+    public int refreshFromTerminalStatistic(@Param("choose") boolean choose);
 
-    //    查找全部用户
-    public List<User> getAllUser();
 
-    //  获取单个用户行为记录
-    public Log getLogById(Integer id);
+    public List<Sex> getSexByMonthStatistic();
 
-    //获取特定年月的访问源数量
-    public SoucreOfAccess getNumbersOfAccessSource(@Param("year") int year, @Param("month") int month);
 
-    public List<Identity> getVisitorIdentityStatistics();
+    public int refreshSexByMonthStatistic();
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -128,14 +128,13 @@
                             <!--第一个图 核心部分 替换该部分即可-->
                             <div class="sales-chart  card-content">
                                 <div id="dianji" style="width: 100%; height: 400%; display: block;">
-
                                     <script type="text/javascript">
                                         // 基于准备好的dom，初始化echarts实例
                                         var myChart = echarts.init(document.getElementById('dianji'));
                                         var app = {};
                                         option = null;
                                         var data = genData(50);
-
+                                        var legend_text = ['PC端','小程序端','一体机'];
                                         option = {
                                             tooltip: {
                                                 trigger: 'item',
@@ -144,7 +143,7 @@
                                             legend: {
                                                 orient: 'vertical',
                                                 x: 'left',
-                                                data:['PC','小程序']
+                                                data:legend_text
                                             },
                                             series: [
                                                 {
@@ -171,8 +170,9 @@
                                                         }
                                                     },
                                                     data:[
-                                                        {value:335, name:'PC'},
-                                                        {value:310, name:'小程序'},
+                                                        {value:[[${statistic.getPC()}]],name:legend_text[0]},
+                                                        {value:[[${statistic.getMP()}]],name:legend_text[1]},
+                                                        {value:[[${statistic.getIM()}]],name:legend_text[2]},
                                                     ]
                                                 }
                                             ]
@@ -351,18 +351,19 @@
                             <div class="sales-chart  card-content">
                                 <div id="echar3" style="width: 100%; height: 400%; display: block;">
 
-                                    <script type="text/javascript">
+                                    <script type="text/javascript" th:inline="javascript">
                                         // 基于准备好的dom，初始化echarts实例
                                         var myChart = echarts.init(document.getElementById('echar3'));
-
+                                        var s = [[${sBMS}]];
+                                        alert(s);
                                         // 指定图表的配置项和数据
-                                        // var xData = function() {
-                                        //     var data = [];
-                                        //     for (var i = 1; i < 13; i++) {
-                                        //         data.push(i + "月份");
-                                        //     }
-                                        //     return data;
-                                        // }();
+                                        var xData = function() {
+                                            var data = [];
+
+                                            return data;
+                                        }();
+                                         
+                                        
                                         var xData = ['1月份', '2月份', '3月份', '4月份', '5月份']
 
                                         option = {
