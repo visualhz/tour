@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gxu.tour.mapper.GoodMapper" >
+  <!--<resultMap id="BaseResultMap" type="com.gxu.tbvp.domain.Accessrecord" >-->
+    <!--&lt;!&ndash;-->
+      <!--WARNING - @mbg.generated-->
+    <!--&ndash;&gt;-->
+    <!--<id column="id" property="id" jdbcType="INTEGER" />-->
+    <!--<result column="userId" property="userid" jdbcType="INTEGER" />-->
+    <!--<result column="accessProduceId" property="accessproduceid" jdbcType="INTEGER" />-->
+    <!--<result column="accessTool" property="accesstool" jdbcType="INTEGER" />-->
+    <!--<result column="accessTime" property="accesstime" jdbcType="TIMESTAMP" />-->
+    <!--<result column="totalTime" property="totaltime" jdbcType="INTEGER" />-->
+  <!--</resultMap>-->
+
+    <resultMap id="BaseResultMap" type="com.gxu.tour.entity.SearchNumByMonth" >
+
+    <id column="SearchNumByMonth_id" property="month" jdbcType="INTEGER" />
+    <result column="SearchNumByMonth_num" property="searchNum" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--指定月份统计数据，统计该月有多少人进行了搜索-->
+  <select id="getSearchDataByTime" resultType="java.lang.Integer" >
+      	SELECT count(1)
+		FROM  syd_tourshow_search_log
+        where create_time between #{start} and #{stop}
+  </select>
+
+    <!--把每个月的搜索量结果数据，更新到结果表-->
+    <update id="UpdateSearchData" parameterType="java.util.List">
+        <foreach collection="searchNumByMonths" item="item" index="index" open="" close="" separator=";">
+            UPDATE SearchNumByMonth_Result
+            <set>
+                SearchNumByMonth_num =#{item.searchNum}
+            </set>
+            <where>
+                SearchNumByMonth_id = #{item.month}
+            </where>
+        </foreach>
+    </update>
+
+    <!--获取用户搜索日志月份结果表数据-->
+    <select id="GetSearchDataForShow" resultMap="BaseResultMap" >
+      	SELECT *
+		FROM  SearchNumByMonth_Result
+        limit #{num}
+  </select>
+
+</mapper>
