@@ -2,7 +2,7 @@ package com.gxu.tour.entity;
 
 /**
  * Create By LLM 2019-08-07
- * Function:分析用户搜索日志，统计每个月搜索量
+ * Function:分析用户搜索日志,用户浏览日志，统计每个月搜索量.
  */
 public class SearchNumByMonth {
 
