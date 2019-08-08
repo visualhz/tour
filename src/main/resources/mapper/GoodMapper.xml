@@ -13,13 +13,36 @@
     <!--<result column="totalTime" property="totaltime" jdbcType="INTEGER" />-->
   <!--</resultMap>-->
 
+    <!--用户搜索日志-->
     <resultMap id="BaseResultMap" type="com.gxu.tour.entity.SearchNumByMonth" >
 
     <id column="SearchNumByMonth_id" property="month" jdbcType="INTEGER" />
     <result column="SearchNumByMonth_num" property="searchNum" jdbcType="INTEGER" />
     </resultMap>
 
-    <!--指定月份统计数据，统计该月有多少人进行了搜索-->
+    <!--用户搜索日志统计-->
+    <resultMap id="SearchRankMap" type="com.gxu.tour.entity.Rank" >
+
+        <result column="search_title" property="name" javaType="string" jdbcType="VARCHAR" />
+        <result column="num" property="num" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--用户搜索日志结果-->
+    <resultMap id="SearchRank" type="com.gxu.tour.entity.Rank" >
+
+        <id column="SearchRank_id" property="ID" jdbcType="INTEGER" />
+        <result column="SearchRank_name" property="name" javaType="string" jdbcType="VARCHAR" />
+        <result column="SearchRank_num" property="num" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--用户浏览日志-->
+    <resultMap id="WatchBaseResultMap" type="com.gxu.tour.entity.SearchNumByMonth" >
+
+        <id column="WatchNumByMonth_id" property="month" jdbcType="INTEGER" />
+        <result column="WatchNumByMonth_num" property="searchNum" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!--用户搜索日志表，指定月份统计数据，统计该月有多少人进行了搜索-->
   <select id="getSearchDataByTime" resultType="java.lang.Integer" >
       	SELECT count(1)
 		FROM  syd_tourshow_search_log
@@ -44,6 +67,96 @@
       	SELECT *
 		FROM  SearchNumByMonth_Result
         limit #{num}
+  </select>
+
+    <!--用户浏览日志表，指定月份统计数据，统计该月有多少人进行了浏览-->
+    <select id="getWatchDataByTime" resultType="java.lang.Integer" >
+      	SELECT count(1)
+		FROM  syd_tourshow_watch_log
+        where create_time between #{start} and #{stop}
+  </select>
+
+    <!--把每个月的浏览量结果数据，更新到结果表-->
+    <update id="UpdateWatchData" parameterType="java.util.List">
+        <foreach collection="searchNumByMonths" item="item" index="index" open="" close="" separator=";">
+            UPDATE WatchNumByMonth_Result
+            <set>
+                WatchNumByMonth_num =#{item.searchNum}
+            </set>
+            <where>
+                WatchNumByMonth_id = #{item.month}
+            </where>
+        </foreach>
+    </update>
+
+    <!--获取用户浏览日志月份结果表数据-->
+    <select id="GetWatchDataForShow" resultMap="WatchBaseResultMap" >
+      	SELECT *
+		FROM  WatchNumByMonth_Result
+        limit #{num}
+  </select>
+
+    <!--***********************分割线,以下是排行榜**********************************-->
+
+    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <select id="getSearchRankData" resultMap="SearchRankMap" >
+        select search_title,count(1) as num
+        from syd_tourshow_search_log
+        where DATE_SUB(CURDATE(),INTERVAL 30 DAY) &lt;= create_time
+        group by search_title
+        order by num desc limit 5
+
+  </select>
+
+    <!--更新用户搜索日志排行结果表-->
+    <update id="UpdateSearchRankData" parameterType="java.util.List">
+        <foreach collection="ranks" item="item" index="index" open="" close="" separator=";">
+            UPDATE SearchRank_Result
+            <set>
+                SearchRank_name =#{item.name},
+                SearchRank_num =#{item.num}
+            </set>
+            <where>
+                SearchRank_id = #{item.ID}
+            </where>
+        </foreach>
+    </update>
+
+    <!--获取用户搜索排行结果表数据-->
+    <select id="GetSearchRankDataForShow" resultMap="SearchRank" >
+      	SELECT *
+		FROM  SearchRank_Result
+  </select>
+
+    <!--**************************************用户浏览日志排行**********************-->
+    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <select id="getWatchRankData" resultMap="SearchRankMap" >
+        select tour_name as search_title ,tour_id,count(1) as num
+        from syd_tourshow_watch_log
+        where DATE_SUB(CURDATE(),INTERVAL 30 DAY) &lt;= create_time
+        group by search_title,tour_id
+        order by num
+        desc limit 5
+  </select>
+
+    <!--更新用户浏览日志排行结果表-->
+    <update id="UpdateWatchRankData" parameterType="java.util.List">
+        <foreach collection="ranks" item="item" index="index" open="" close="" separator=";">
+            UPDATE WatchRank_Result
+            <set>
+                WatchRank_name =#{item.name},
+                WatchRank_num =#{item.num}
+            </set>
+            <where>
+                WatchRank_id = #{item.ID}
+            </where>
+        </foreach>
+    </update>
+
+    <!--获取用户浏览排行结果表数据-->
+    <select id="GetWatchRankDataForShow" resultMap="SearchRank" >
+      	SELECT WatchRank_id as SearchRank_id,WatchRank_name as SearchRank_name,WatchRank_num as SearchRank_num
+		FROM  WatchRank_Result
   </select>
 
 </mapper>
