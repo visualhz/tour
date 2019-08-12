@@ -158,5 +158,4 @@
       	SELECT WatchRank_id as SearchRank_id,WatchRank_name as SearchRank_name,WatchRank_num as SearchRank_num
 		FROM  WatchRank_Result
   </select>
-
 </mapper>

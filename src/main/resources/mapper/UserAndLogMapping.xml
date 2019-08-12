@@ -4,16 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gxu.tour.mapper.UserAndLogMapping">
 
-    <resultMap id="fromTerminalResult" type="FromTerminal">
+    <!-- 接受访问来源设备映射结果集合   -->
+    <resultMap id="CurrentFMData" type="FromTerminal">
+        <result property="id" column="id"/>
+        <result property="PC" column="PC"/>
+        <result property="MP" column="MP"/>
+        <result property="IM" column="IM"/>
         <result property="year" column="year"/>
         <result property="month" column="month"/>
-        <result property="MP" column="MP"/>
-        <result property="PC" column="PC"/>
-        <result property="IM" column="IM"/>
     </resultMap>
 
-
-    <resultMap id="sexByMonthResult" type="Sex">
+    <!--性别统计结果集-->
+    <resultMap id="genderResult" type="Gender">
+        <result property="id" column="id"/>
         <result property="year" column="year"/>
         <result property="month" column="month"/>
         <result property="manNum" column="man_num"/>
@@ -21,59 +24,138 @@
         <result property="total" column="total"/>
     </resultMap>
 
+    <!-- 省份结果结果集 -->
+    <resultMap id="provinceResult" type="Province">
+        <result property="id" column="id"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="sum" column="sum"/>
+    </resultMap>
+
+    <!-- 已注册用户所属城市结果集   -->
+    <resultMap id="userCityResult" type="City">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+    </resultMap>
 
 
-    <!-- fromTerminalResult查询出访问入口的人数
-     '0 | pc端 ; 1 | 小程序端 ； 2 | 一体机 ；'
-     -->
-    <select id="getFromTerminalStatistic" resultMap="fromTerminalResult">
-        SELECT year, month, PC, MP, IM  FROM from_terminal_result a
-        WHERE NOT EXISTS( SELECT * FROM from_terminal_result b
-        WHERE a.`year` = b.`year` AND a.`month` = b.`month`
-        AND a.`create_time` &lt; b.`create_time`) ORDER BY a.`year`, a.`month` DESC LIMIT 0,1;
+    <!--查询访问设备来源  -->
+    <select id="getCurrentFMData" resultMap="CurrentFMData">
+        select * from from_terminal_result
     </select>
 
-    <select id="getSexByMonthStatistic" resultMap="sexByMonthResult">
-
-        SELECT year, month, man_num, women_num, total FROM sexByMonth a
-        WHERE NOT EXISTS(SELECT * FROM sexByMonth b
-        WHERE a.`year` =b.`year` AND a.`month` = b.`month` AND a.`create_time`  &lt; b.`create_time`)
-        ORDER BY YEAR, MONTH LIMIT 0,12;
-    </select>
-
-
-
-    <!--    从syd_tourshow_watch_log中查出当月的浏览数据
-            插入到from_terminal_result表中。
-            -->
-    <insert id="refreshFromTerminalStatistic">
-        INSERT INTO from_terminal_result(YEAR,MONTH,PC,MP,IM)
-        SELECT YEAR(create_time)AS 'year',
-        MONTH(create_time) AS 'mon',
+    <!-- 统计访问来源数据 -->
+    <select id="doFMStatistic" resultMap="CurrentFMData">
+        SELECT
         SUM(IF (from_terminal=0,1,0)) AS 'PC',
         SUM(IF (from_terminal=1,1,0)) AS 'MP',
-        SUM(IF (from_terminal=2,1,0)) AS 'IM'
-        FROM syd_tourshow_watch_log
-        <if test="choose==true">
-            WHERE YEAR(create_time)=YEAR(CURRENT_TIMESTAMP) AND MONTH(create_time)=MONTH (CURRENT_TIMESTAMP )
-        </if>
-        GROUP BY MONTH(create_time),YEAR(create_time);
+        SUM(IF (from_terminal=2,1,0)) AS 'IM',
+        YEAR(CURRENT_TIMESTAMP) year,
+        MONTH(CURRENT_TIMESTAMP) month
+        FROM syd_tourshow_watch_log WHERE
+        YEAR(create_time)=YEAR(CURRENT_TIMESTAMP) AND
+        MONTH(create_time)= MONTH(CURRENT_TIMESTAMP);
+    </select>
 
-    </insert>
+    <!--更新访问来源数据表-->
+    <update id="updateFMData" parameterType="FromTerminal">
+        UPDATE from_terminal_result SET
+        year=#{data.year},
+        month=#{data.month},
+        PC=#{data.PC},
+        MP=#{data.MP},
+        IM=#{data.IM}
+        WHERE id = 1;
 
-    <insert id="refreshSexByMonthStatistic">
-    INSERT INTO sexByMonth(YEAR,MONTH,man_num,women_num,total)
-    SELECT YEAR(lo.`create_time`) AS 'year',
-    MONTH(lo.`create_time`) AS 'month',
-    SUM(IF(us.`sex`=0,1,0)) AS 'man',
-    SUM(IF(us.`sex`=1,1,0)) AS 'women',
-    COUNT(*) AS 'total'
-    FROM syd_tourshow_user us
-    INNER JOIN `syd_tourshow_watch_log` lo ON us.`uid` = lo.`uid`
-    WHERE DATE_FORMAT(lo.`create_time`,'%Y-%m') > DATE_FORMAT(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 12 MONTH),'%Y-%m')
-    GROUP BY YEAR, MONTH;
-    </insert>
+    </update>
 
 
+    <!--获取性别统计数据-->
+    <select id="getGenderStatistics" resultMap="genderResult">
+        SELECT * FROM sexByMonth ORDER BY YEAR DESC ,MONTH DESC ;
+    </select>
 
+    <!--  进行性别数据统计  -->
+    <select id="doGenderStatistics" resultMap="genderResult">
+    SET @id=0;
+    SELECT @id:=@id +1 AS id , SUM(IF(sex=1,1,0)) AS man_num, SUM(IF(sex=0,1,0)) AS women_num,COUNT(*) total,
+    year, month FROM (SELECT sex, a.`uid` AS 'auid', b.uid AS 'buid', b.year, b.month FROM `syd_tourshow_user` a
+    INNER JOIN(SELECT uid, MAX(YEAR(create_time)) AS 'year',MAX(MONTH(create_time)) AS 'month'
+    FROM `syd_tourshow_watch_log` GROUP BY uid) b ON a.`uid` = b.uid) c
+    GROUP BY year, month ORDER BY year DESC, month DESC LIMIT 0, 12;
+    </select>
+
+    <!--  更新性别统计数据保存表  -->
+    <update id="updateGenderStatistics" parameterType="java.util.List">
+        <foreach collection="genders" item="gender" index="index" separator=";">
+            UPDATE sexByMonth
+            <set>
+                year=#{gender.year},
+                month=#{gender.month},
+                man_num=#{gender.manNum},
+                women_num=#{gender.womenNum},
+                total=#{gender.total}
+            </set>
+            <where>
+                id=#{gender.id}
+            </where>
+        </foreach>
+    </update>
+
+    <!--    //获取当月省份归属统计数据-->
+    <select id="getProvinceStatistics" resultMap="provinceResult">
+        SELECT * FROM `toursource_result` ORDER BY sum DESC ;
+    </select>
+
+    <!--    //统计当月省份归属数据-->
+    <select id="doProvinceStatistics" resultMap="provinceResult">
+        SET @id=0;
+        SELECT @id:=@id +1 AS id,t1.`name` province_name, COUNT(t2.province) sum  FROM `province` t1 LEFT JOIN (
+        SELECT a.`province` FROM `mapping` a
+        INNER JOIN(SELECT city  FROM `syd_tourshow_user` b WHERE b.`uid` IN
+        (SELECT uid FROM syd_tourshow_watch_log WHERE YEAR(create_time)=YEAR(CURRENT_TIMESTAMP)
+        AND MONTH(create_time)= month(CURRENT_TIMESTAMP) GROUP BY uid) )c ON a.`city`= c.city) t2 ON t1.`name` = t2.province
+        GROUP BY t1.`name` ORDER BY sum DESC;
+    </select>
+
+    <!--    //更新当月省份归属数据/-->
+    <update id="updateProvinceStatistics" parameterType="java.util.List">
+        <foreach collection="provinces" item="province" index="index" separator=";">
+            UPDATE toursource_result
+            <set>
+                province_name=#{province.provinceName},
+                sum=#{province.sum}
+            </set>
+            <where>
+                id=#{province.id}
+            </where>
+        </foreach>
+    </update>
+
+
+<!--    //查询注册用户统计数据-->
+    <select id="getUserCityStatistics" resultMap="userCityResult">
+        SELECT * FROM city_result;
+    </select>
+
+<!--    //统计注册用户来源城市-->
+    <select id="doUserCityStatistics" resultMap="userCityResult">
+        SELECT t1.`city` AS name, COUNT(t2.city) AS number FROM mapping t1
+        LEFT JOIN (SELECT city  FROM `syd_tourshow_user` ) t2 ON t1.`city`=t2.city
+        GROUP BY t1.city HAVING COUNT(t2.city) > 1 ORDER BY number DESC LIMIT 0, 5;
+    </select>
+
+<!--    //更新注册用户来源统计数据-->
+    <update id="updateUserCityStatistics" parameterType="java.util.List">
+        <foreach collection="cities" item="city" index="index" separator=";">
+            UPDATE city_result
+            <set>
+                name=#{city.name},
+                number=#{city.number}
+            </set>
+            <where>
+                id=#{city.id}
+            </where>
+        </foreach>
+    </update>
 </mapper>

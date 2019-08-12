@@ -1,30 +1,30 @@
 package com.gxu.tour.entity;
 
 /**
- * year:年
- * month:月
  * MP：小程序
  * PC：客户端
  * IM：一体机
  */
 
 public class FromTerminal {
-    private int year;
-    private int month;
-    private int MP;
-    private int PC;
-    private int IM;
+    int id;
+    int PC;
+    int MP;
+    int IM;
+    int year;
+    int month;
 
     public FromTerminal() {
         super();
     }
 
-    public FromTerminal(int year, int month, int MP, int PC, int IM) {
+    public FromTerminal(int id, int PC, int MP, int IM, int year, int month) {
+        this.id = id;
+        this.PC = PC;
+        this.MP = MP;
+        this.IM = IM;
         this.year = year;
         this.month = month;
-        this.MP = MP;
-        this.PC = PC;
-        this.IM = IM;
     }
 
     public int getYear() {
@@ -43,12 +43,12 @@ public class FromTerminal {
         this.month = month;
     }
 
-    public int getMP() {
-        return MP;
+    public int getId() {
+        return id;
     }
 
-    public void setMP(int MP) {
-        this.MP = MP;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getPC() {
@@ -57,6 +57,14 @@ public class FromTerminal {
 
     public void setPC(int PC) {
         this.PC = PC;
+    }
+
+    public int getMP() {
+        return MP;
+    }
+
+    public void setMP(int MP) {
+        this.MP = MP;
     }
 
     public int getIM() {
@@ -70,11 +78,12 @@ public class FromTerminal {
     @Override
     public String toString() {
         return "FromTerminal{" +
-                "year=" + year +
-                ", month=" + month +
-                ", MP=" + MP +
+                "id=" + id +
                 ", PC=" + PC +
+                ", MP=" + MP +
                 ", IM=" + IM +
+                ", year=" + year +
+                ", month=" + month +
                 '}';
     }
 }

@@ -2,28 +2,38 @@ package com.gxu.tour.entity;
 
 /**
  * year:年
- * month:月
- * manNum:男性人数
- * womenNum:女性人数
- * total:总人数
+ * month：月
+ * manNum：男性人数
+ * womenNum：女性人数
+ * total：总人数
  */
-public class Sex {
+public class Gender {
+    private int id;
     private int year;
     private int month;
     private int manNum;
     private int womenNum;
     private int total;
 
-    public Sex()
-    {
+    public Gender() {
         super();
     }
-    public Sex(int year, int month, int manNum, int womenNum, int total) {
+
+    public Gender(int id, int year, int month, int manNum, int womenNum, int total) {
+        this.id = id;
         this.year = year;
         this.month = month;
         this.manNum = manNum;
         this.womenNum = womenNum;
         this.total = total;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getYear() {
@@ -68,8 +78,9 @@ public class Sex {
 
     @Override
     public String toString() {
-        return "Sex{" +
-                "year=" + year +
+        return "Gender{" +
+                "id=" + id +
+                ", year=" + year +
                 ", month=" + month +
                 ", manNum=" + manNum +
                 ", womenNum=" + womenNum +

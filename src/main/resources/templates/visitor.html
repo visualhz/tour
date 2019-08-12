@@ -28,6 +28,9 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <script src="/assets/js/echarts.min.js"></script>
     <script src="/assets/js/china.js"></script>
+
+    <script src="/assets/js/lib/jquery.min.js"></script>
+    <script src="/assets/js/lib/jquery.nanoscroller.min.js"></script>
 </head>
 
 <body>
@@ -61,7 +64,8 @@
     <div class="pull-left">
         <div class="logo">
             <a href="index.html">
-                <img id="logoImg" src="/logo/logo.png" data-logo_big="/logo/logo.png" data-logo_small="logo/logoSmall.png"
+                <img id="logoImg" src="/logo/logo.png" data-logo_big="/logo/logo.png"
+                     data-logo_small="logo/logoSmall.png"
                      alt="Nixon"/>
             </a>
         </div>
@@ -109,14 +113,13 @@
             <!-- /# row -->
             <div class="main-content">
 
-                <!-- /# row  1行放2个图 -->
+                <!--                /# row 1行放2个图-->
                 <div class="row">
-
-                    <!--第1个图-->
+                    <!--      图1             -->
                     <div class="col-lg-6">
                         <div class="card alert">
                             <div class="card-header">
-                                <h4>当前月访问来源</h4>
+                                <h4>当前月访问设备来源统计</h4>
                                 <div class="card-header-right-icon">
                                     <ul>
                                         <!-- <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li> -->
@@ -130,111 +133,195 @@
                                 <div id="dianji" style="width: 100%; height: 400%; display: block;">
                                     <script type="text/javascript">
                                         // 基于准备好的dom，初始化echarts实例
-                                        var myChart = echarts.init(document.getElementById('dianji'));
-                                        var app = {};
-                                        option = null;
-                                        var data = genData(50);
-                                        var legend_text = ['PC端','小程序端','一体机'];
-                                        option = {
-                                            tooltip: {
-                                                trigger: 'item',
-                                                formatter: "{a} <br/>{b}: {c} ({d}%)"
-                                            },
-                                            legend: {
-                                                orient: 'vertical',
-                                                x: 'left',
-                                                data:legend_text
-                                            },
-                                            series: [
-                                                {
-                                                    name:'访问来源',
-                                                    type:'pie',
-                                                    radius: ['50%', '70%'],
-                                                    avoidLabelOverlap: false,
-                                                    label: {
-                                                        normal: {
-                                                            show: false,
-                                                            position: 'center'
+                                        var myChart1 = echarts.init(document.getElementById('dianji'));
+                                        var datas = [];
+                                        $.ajax({
+                                            url: "/api/getCurrentFMData",
+                                            type: "get",
+                                            dataType: "json",
+                                            success: function (data) {
+                                                var year = data['year'];
+                                                var month = data['month'];
+                                                datas.push({'name': "PC", "value": data['pc']});
+                                                datas.push({'name': "小程序", "value": data['mp']});
+                                                datas.push({'name': "一体机", 'value': data['im']});
+                                                console.log(datas);
+                                                option = {
+                                                    color: ["#EAEA26", "#FE5656", "#01E17E"],
+                                                    grid: {
+                                                        left: -100,
+                                                        top: 50,
+                                                        bottom: 10,
+                                                        right: 10,
+                                                        containLabel: true
+                                                    },
+                                                    tooltip: {
+                                                        trigger: 'item',
+                                                        formatter: "{b} : {c} ({d}%)"
+                                                    },
+                                                    legend: {
+                                                        type: "scroll",
+                                                        orient: "vartical",
+                                                        // x: "right",
+                                                        top: "top",
+                                                        right: "15",
+                                                        // bottom: "0%",
+                                                        itemWidth: 20,
+                                                        itemHeight: 10,
+                                                        itemGap: 16,
+                                                        textStyle: {
+                                                            color: '#A3E2F4',
+                                                            fontSize: 12,
+                                                            fontWeight: 0
                                                         },
-                                                        emphasis: {
+                                                        data: ['PC', '小程序', '一体机']
+                                                    },
+                                                    polar: {},
+                                                    angleAxis: {
+                                                        interval: 1,
+                                                        type: 'category',
+                                                        data: [],
+                                                        z: 10,
+                                                        axisLine: {
+                                                            show: false,
+                                                            lineStyle: {
+                                                                color: "#0B4A6B",
+                                                                width: 1,
+                                                                type: "solid"
+                                                            },
+                                                        },
+                                                        axisLabel: {
+                                                            interval: 0,
                                                             show: true,
-                                                            textStyle: {
-                                                                fontSize: '30',
-                                                                fontWeight: 'bold'
+                                                            color: "#0B4A6B",
+                                                            margin: 8,
+                                                            fontSize: 16
+                                                        },
+                                                    },
+                                                    radiusAxis: {
+                                                        min: 40,
+                                                        max: 120,
+                                                        interval: 20,
+                                                        axisLine: {
+                                                            show: false,
+                                                            lineStyle: {
+                                                                color: "#0B3E5E",
+                                                                width: 1,
+                                                                type: "solid"
+                                                            },
+                                                        },
+                                                        axisLabel: {
+                                                            formatter: '{value} %',
+                                                            show: false,
+                                                            padding: [0, 0, 20, 0],
+                                                            color: "#0B3E5E",
+                                                            fontSize: 16
+                                                        },
+                                                        splitLine: {
+                                                            lineStyle: {
+                                                                color: "#0B3E5E",
+                                                                width: 2,
+                                                                type: "solid"
                                                             }
                                                         }
                                                     },
-                                                    labelLine: {
-                                                        normal: {
-                                                            show: false
-                                                        }
-                                                    },
-                                                    data:[
-                                                        {value:[[${statistic.getPC()}]],name:legend_text[0]},
-                                                        {value:[[${statistic.getMP()}]],name:legend_text[1]},
-                                                        {value:[[${statistic.getIM()}]],name:legend_text[2]},
-                                                    ]
+                                                    calculable: true,
+                                                    series: [{
+                                                        type: 'pie',
+                                                        radius: ["5%", "10%"],
+                                                        hoverAnimation: false,
+                                                        labelLine: {
+                                                            normal: {
+                                                                show: false,
+                                                                length: 30,
+                                                                length2: 55
+                                                            },
+                                                            emphasis: {
+                                                                show: false
+                                                            }
+                                                        },
+                                                        data: [{
+                                                            name: '',
+                                                            value: 0,
+                                                            itemStyle: {
+                                                                normal: {
+                                                                    color: "#0B4A6B"
+                                                                }
+                                                            }
+                                                        }]
+                                                    }, {
+                                                        type: 'pie',
+                                                        radius: ["90%", "95%"],
+                                                        hoverAnimation: false,
+                                                        labelLine: {
+                                                            normal: {
+                                                                show: false,
+                                                                length: 30,
+                                                                length2: 55
+                                                            },
+                                                            emphasis: {
+                                                                show: false
+                                                            }
+                                                        },
+                                                        name: "",
+                                                        data: [{
+                                                            name: '',
+                                                            value: 0,
+                                                            itemStyle: {
+                                                                normal: {
+                                                                    color: "#0B4A6B"
+                                                                }
+                                                            }
+                                                        }]
+                                                    }, {
+                                                        stack: 'a',
+                                                        type: 'pie',
+                                                        radius: ['20%', '80%'],
+                                                        roseType: 'area',
+                                                        zlevel: 10,
+                                                        label: {
+                                                            normal: {
+                                                                show: true,
+                                                                formatter: "{c}",
+                                                                textStyle: {
+                                                                    fontSize: 12,
+                                                                },
+                                                                position: 'outside'
+                                                            },
+                                                            emphasis: {
+                                                                show: true
+                                                            }
+                                                        },
+                                                        labelLine: {
+                                                            normal: {
+                                                                show: true,
+                                                                length: 20,
+                                                                length2: 55
+                                                            },
+                                                            emphasis: {
+                                                                show: false
+                                                            }
+                                                        },
+                                                        data: datas,
+                                                    },]
                                                 }
-                                            ]
-                                        };
-
-
-
-
-                                        function genData(count) {
-                                            var nameList = [
-                                                '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闵', '席', '季', '麻', '强', '贾', '路', '娄', '危'
-                                            ];
-                                            var legendData = [];
-                                            var seriesData = [];
-                                            var selected = {};
-                                            for (var i = 0; i < 50; i++) {
-                                                name = Math.random() > 0.65
-                                                    ? makeWord(4, 1) + '·' + makeWord(3, 0)
-                                                    : makeWord(2, 1);
-                                                legendData.push(name);
-                                                seriesData.push({
-                                                    name: name,
-                                                    value: Math.round(Math.random() * 100000)
-                                                });
-                                                selected[name] = i < 6;
+                                                myChart1.setOption(option);
                                             }
 
-                                            return {
-                                                legendData: legendData,
-                                                seriesData: seriesData,
-                                                selected: selected
-                                            };
+                                        });
 
-                                            function makeWord(max, min) {
-                                                var nameLen = Math.ceil(Math.random() * max + min);
-                                                var name = [];
-                                                for (var i = 0; i < nameLen; i++) {
-                                                    name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
-                                                }
-                                                return name.join('');
-                                            }
-                                        }
-                                        ;
-                                        if (option && typeof option === "object") {
-                                            myChart.setOption(option, true);
-                                        }
-                                        myChart.setOption(option);
+
                                     </script>
                                 </div>
                             </div>
-                            <!--第一个图 核心部分 替换该部分即可-->
 
                         </div>
                     </div>
-                    <!--第1个图-->
 
-                    <!--第2个图-->
-                    <!-- /# column -->
                     <div class="col-lg-6">
                         <div class="card alert">
                             <div class="card-header">
-                                <h4>月总访问流量</h4>
+                                <h4>注册用户来源城市热门统计</h4>
                                 <div class="card-header-right-icon">
                                     <ul>
                                         <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
@@ -243,101 +330,92 @@
                                 </div>
                             </div>
 
-
                             <!--第2个图 核心部分 替换该部分即可-->
                             <div class="sales-chart  card-content">
                                 <div id="shoucang" style="width: 100%; height: 400%; display: block;">
 
                                     <script type="text/javascript">
-                                        var dom = document.getElementById("shoucang");
-                                        var myChart = echarts.init(dom);
-                                        var app = {};
-                                        option = null;
-                                        option = {
-                                            tooltip: {
-                                                trigger: 'axis',
-                                                axisPointer: {
-                                                    type: 'cross',
-                                                    label: {
-                                                        backgroundColor: '#6a7985'
+                                        var myChart2 = echarts.init(document.getElementById('shoucang'));
+                                        data2 = []
+                                        $.ajax(
+                                            {
+                                                url: "/api/getUserCityStatistics",
+                                                type: 'get',
+                                                dataType: 'json',
+                                                success: function (datas) {
+                                                    for (var i = 0; i < datas.length; i++) {
+                                                        var item = datas[i];
+                                                        data2.push({'name': item['name'], 'value': item['number']});
                                                     }
+                                                    var colors = ['#f36119', '#ff9921', '#20c8ff', '#2cb7ff', '#1785ef'];
+                                                    var url = 'https://q.cnblogs.com/Images/qdigg.gif';
+                                                    option = {
+
+                                                        backgroundColor: '#ffffff',
+                                                        color: colors,
+                                                        "tooltip": {
+                                                            "trigger": "axis",
+                                                            "axisPointer": {
+                                                                "type": "cross",
+                                                                "label": {
+                                                                    "backgroundColor": "red"
+                                                                },
+                                                                "lineStyle": {
+                                                                    "color": "#9eb2cb"
+                                                                }
+                                                            }
+                                                        },
+                                                        "grid": {
+                                                            "top": 20,
+                                                            "left": "2%",
+                                                            "right": 20,
+                                                            "bottom": 30,
+                                                            "containLabel": true,
+                                                            "borderWidth": 0.5
+                                                        },
+
+                                                        series: [
+                                                            {
+                                                                top: 0,
+                                                                type: 'funnel',
+                                                                left: '10%',
+                                                                width: '80%',
+                                                                gap: 16,
+                                                                minSize: 150,
+                                                                maxSize: 410,
+                                                                label: {
+                                                                    show: true,
+                                                                    position: 'inside',
+                                                                    formatter: '{b}  ({c})'
+                                                                },
+                                                                data: data2
+                                                            },
+
+                                                        ]
+                                                    };
+                                                    myChart2.setOption(option);
+
                                                 }
-                                            },
-                                            legend: {
-                                                data: [ '访问量']
-                                            },
-                                            toolbox: {
-                                                feature: {
-                                                    saveAsImage: {}
-                                                }
-                                            },
-                                            grid: {
-                                                left: '3%',
-                                                right: '4%',
-                                                bottom: '3%',
-                                                containLabel: true
-                                            },
-                                            xAxis: [
-                                                {
-                                                    type: 'category',
-                                                    boundaryGap: false,
-                                                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月']
-                                                }
-                                            ],
-                                            yAxis: [
-                                                {
-                                                    type: 'value'
-                                                }
-                                            ],
-                                            series: [
-                                                {
-                                                    name: '访问量',
-                                                    type: 'line',
-                                                    stack: '总量',
-                                                    areaStyle: {normal: {}},
-                                                    data: [320, 332, 301, 334, 390, 330, 320]
-                                                },
-                                                // {
-                                                //     name: '景点',
-                                                //     type: 'line',
-                                                //     stack: '总量',
-                                                //     label: {
-                                                //         normal: {
-                                                //             show: true,
-                                                //             position: 'top'
-                                                //         }
-                                                //     },
-                                                //     areaStyle: {normal: {}},
-                                                //     data: [220, 932, 91, 934, 1290, 1330, 1320]
-                                                // }
-                                            ]
-                                        };
-                                        ;
-                                        if (option && typeof option === "object") {
-                                            myChart.setOption(option, true);
-                                        }
+
+                                            }
+                                        );
+
+
                                     </script>
-
-
                                 </div>
                             </div>
-                            <!--第2个图 核心部分 替换该部分即可-->
-
-
                         </div>
                     </div>
-                    <!-- /# column -->
-                    <!--第2个图-->
                 </div>
 
+
                 <!--第二行开始-->
-                <!-- /# row -->
                 <div class="row">
-                    <!--第3个图-->
+                    <!--                    第3个图-->
                     <div class="col-lg-6">
                         <div class="card alert">
                             <div class="card-header">
-                                <h4>游客分析</h4>
+                                <h4>最近一年浏览游客统计</h4>
                                 <div class="card-header-right-icon">
                                     <ul>
                                         <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
@@ -353,608 +431,436 @@
 
                                     <script type="text/javascript" th:inline="javascript">
                                         // 基于准备好的dom，初始化echarts实例
-                                        var myChart = echarts.init(document.getElementById('echar3'));
-                                        var s = [[${sBMS}]];
-                                        alert(s);
-                                        // 指定图表的配置项和数据
-                                        var xData = function() {
-                                            var data = [];
+                                        var myChart3 = echarts.init(document.getElementById('echar3'));
+                                        var xData = [];
+                                        var mNum = [];
+                                        var wNum = [];
+                                        var total = [];
+                                        $.ajax(
+                                            {
+                                                url: "/api/getGenderStatistics",
+                                                type: "get",
+                                                dataType: "json",
+                                                success: function (data) {
+                                                    for (var i = 0; i < data.length; i++) {
+                                                        var item = data[i];
+                                                        xData.push((item['year'].toString() + "-" + item['month'].toString()));
+                                                        mNum.push(item['manNum']);
+                                                        wNum.push(item['womenNum']);
+                                                        total.push(item['total']);
 
-                                            return data;
-                                        }();
-                                         
-                                        
-                                        var xData = ['1月份', '2月份', '3月份', '4月份', '5月份']
-
-                                        option = {
-                                            backgroundColor: "#ffffff",
-                                            "title": {
-
-
-                                                x: "4%",
-
-                                                textStyle: {
-                                                    color: '#fff',
-                                                    fontSize: '22'
-                                                },
-                                                subtextStyle: {
-                                                    color: '#90979c',
-                                                    fontSize: '16',
-
-                                                },
-                                            },
-                                            "tooltip": {
-                                                "trigger": "axis",
-                                                "axisPointer": {
-                                                    "type": "shadow",
-                                                    textStyle: {
-                                                        color: "#fff"
                                                     }
-
-                                                },
-                                            },
-                                            "grid": {
-                                                "borderWidth": 0,
-                                                "top": 110,
-                                                "bottom": 95,
-                                                textStyle: {
-                                                    color: "#fff"
-                                                }
-                                            },
-                                            "legend": {
-                                                x: '4%',
-                                                top: '5%',
-                                                textStyle: {
-                                                    color: '#90979c',
-                                                },
-                                                "data": ['男', '女', '总数']
-                                            },
-
-
-                                            "calculable": true,
-                                            "xAxis": [{
-                                                "type": "category",
-                                                "axisLine": {
-                                                    lineStyle: {
-                                                        color: '#90979c'
-                                                    }
-                                                },
-                                                "splitLine": {
-                                                    "show": false
-                                                },
-                                                "axisTick": {
-                                                    "show": false
-                                                },
-                                                "splitArea": {
-                                                    "show": false
-                                                },
-                                                "axisLabel": {
-                                                    "interval": 0,
-
-                                                },
-                                                "data": xData,
-                                            }],
-                                            "yAxis": [{
-                                                "type": "value",
-                                                "splitLine": {
-                                                    "show": false
-                                                },
-                                                "axisLine": {
-                                                    lineStyle: {
-                                                        color: '#90979c'
-                                                    }
-                                                },
-                                                "axisTick": {
-                                                    "show": false
-                                                },
-                                                "axisLabel": {
-                                                    "interval": 0,
-
-                                                },
-                                                "splitArea": {
-                                                    "show": false
-                                                },
-
-                                            }],
-                                            "dataZoom": [{
-                                                "show": true,
-                                                "height": 30,
-                                                "xAxisIndex": [
-                                                    0
-                                                ],
-                                                bottom: 30,
-                                                "start": 10,
-                                                "end": 80,
-                                                handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
-                                                handleSize: '110%',
-                                                handleStyle: {
-                                                    color: "#d3dee5",
-
-                                                },
-                                                textStyle: {
-                                                    color: "#fff"
-                                                },
-                                                borderColor: "#90979c"
-
-
-                                            }, {
-                                                "type": "inside",
-                                                "show": true,
-                                                "height": 15,
-                                                "start": 1,
-                                                "end": 35
-                                            }],
-                                            "series": [{
-                                                "name": "男",
-                                                "type": "bar",
-                                                "stack": "总量",
-                                                "barMaxWidth": 35,
-                                                "barGap": "10%",
-                                                "itemStyle": {
-                                                    "normal": {
-                                                        "color": "rgba(255,144,128,1)",
-                                                        "label": {
-                                                            "show": true,
-                                                            "textStyle": {
-                                                                "color": "#fff"
+                                                    option = {
+                                                        'tooltip': {
+                                                            "trigger": "axis",
+                                                            "axisPointer": {
+                                                                "type": "shadow",
+                                                                textStyle: {
+                                                                    color: "#fff"
+                                                                }
                                                             },
-                                                            "position": "insideTop",
-                                                            formatter: function (p) {
-                                                                return p.value > 0 ? (p.value) : '';
+                                                        },
+                                                        "grid": {
+                                                            "borderWidth": 0,
+                                                            "top": 110,
+                                                            "bottom": 95,
+                                                            textStyle: {
+                                                                color: "#fff"
                                                             }
-                                                        }
+                                                        },
+                                                        "legend": {
+                                                            x: "4%",
+                                                            top: '11%',
+                                                            textStyle: {
+                                                                color: '#90979c',
+                                                            },
+                                                            "data": ["男", "女", "总人数"]
+                                                        },
+
+                                                        "calculable": true,
+
+                                                        xAxis: [{
+                                                            'type': 'category',
+
+                                                            data: xData,
+                                                            'splitLine': {
+                                                                'show': false
+                                                            },
+                                                            axisTick: {
+                                                                show: false
+                                                            },
+                                                            "splitArea": {
+                                                                "show": false
+                                                            },
+                                                            axisLine: {
+                                                                lineStyle: {
+                                                                    color: '#90979c'
+                                                                }
+                                                            },
+                                                        }],
+                                                        yAxis: [{
+                                                            "type": "value",
+                                                            "splitLine": {
+                                                                "show": false
+                                                            },
+                                                            "axisLine": {
+                                                                lineStyle: {
+                                                                    color: "#90979c"
+                                                                }
+                                                            },
+                                                            "axisTick": {
+                                                                "show": false
+                                                            },
+                                                            axisLabel: {
+                                                                "interval": 0,
+                                                            },
+                                                            "splitArea": {
+                                                                "show": false
+                                                            },
+
+                                                        }],
+                                                        dataZoom: [
+                                                            {   // 这个dataZoom组件，默认控制x轴。
+                                                                type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+                                                                start: 10,      // 左边在 10% 的位置。
+                                                                end: 60         // 右边在 60% 的位置。
+                                                            },
+                                                            {   // 这个dataZoom组件，也控制x轴。
+                                                                type: 'inside', // 这个 dataZoom 组件是 inside 型 dataZoom 组件
+                                                                start: 10,      // 左边在 10% 的位置。
+                                                                end: 60         // 右边在 60% 的位置。
+                                                            }
+                                                        ],
+                                                        series: [
+
+                                                            {
+                                                                "name": "男",
+                                                                'type': 'bar',
+                                                                'stack': '总量',
+                                                                'barMaxWidth': 35,
+                                                                'barGap': '10%',
+                                                                'itemStyle': {
+                                                                    'normal': {
+                                                                        'color': 'rgba(255,144,128,1)',
+                                                                        'label': {
+                                                                            'show': true,
+                                                                            'textStyle': {
+                                                                                'color': "#fff"
+                                                                            },
+                                                                            'position': 'insideTop',
+                                                                            formatter: function (p) {
+                                                                                return p.value > 0 ? (p.value) : "";
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                'data': mNum,
+                                                            },
+
+                                                            {
+                                                                "name": "女",
+                                                                'type': 'bar',
+                                                                'stack': '总量',
+                                                                'barMaxWidth': 35,
+                                                                'barGap': '10%',
+                                                                'itemStyle': {
+                                                                    'normal': {
+                                                                        'color': 'rgba(0,191,183,1)',
+                                                                        'label': {
+                                                                            'show': true,
+                                                                            'textStyle': {
+                                                                                'color': "#fff"
+                                                                            },
+                                                                            'position': 'insideTop',
+                                                                            formatter: function (p) {
+                                                                                return p.value > 0 ? (p.value) : "";
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                'data': wNum,
+                                                            },
+
+                                                            {
+                                                                "name": "总人数",
+                                                                'type': 'line',
+                                                                'stack': '总量',
+                                                                symbolSize: 10,
+                                                                symbol: 'circle',
+                                                                'itemStyle': {
+                                                                    'normal': {
+                                                                        'color': 'rgba(128,100,280,1)',
+                                                                        'label': {
+                                                                            'show': true,
+                                                                            'textStyle': {
+                                                                                'color': "#fff"
+                                                                            },
+                                                                            'position': 'insideTop',
+                                                                            formatter: function (p) {
+                                                                                return p.value > 0 ? (p.value) : "";
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                'data': total,
+                                                            },
+
+                                                        ]
                                                     }
+
+                                                    // 使用刚指定的配置项和数据显示图表。
+                                                    myChart3.setOption(option);
+
                                                 },
-                                                "data": [
-                                                    709,
-                                                    1917,
-                                                    2455,
-                                                    2610,
-                                                    1719
 
-                                                ],
-                                            },
+                                            }
+                                        );
 
-                                                {
-                                                    "name": "女",
-                                                    "type": "bar",
-                                                    "stack": "总量",
-                                                    "itemStyle": {
-                                                        "normal": {
-                                                            "color": "rgba(0,191,183,1)",
-                                                            "barBorderRadius": 0,
-                                                            "label": {
-                                                                "show": true,
-                                                                "position": "top",
-                                                                formatter: function (p) {
-                                                                    return p.value > 0 ? (p.value) : '';
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    "data": [
-                                                        327,
-                                                        1776,
-                                                        507,
-                                                        1200,
-                                                        800
-
-                                                    ]
-                                                }, {
-                                                    "name": "总数",
-                                                    "type": "line",
-                                                    "stack": "总量",
-                                                    symbolSize: 10,
-                                                    symbol: 'circle',
-                                                    "itemStyle": {
-                                                        "normal": {
-                                                            "color": "rgba(252,230,48,1)",
-                                                            "barBorderRadius": 0,
-                                                            "label": {
-                                                                "show": true,
-                                                                "position": "top",
-                                                                formatter: function (p) {
-                                                                    return p.value > 0 ? (p.value) : '';
-                                                                }
-                                                            }
-                                                        }
-                                                    },
-                                                    "data": [
-                                                        1036,
-                                                        3693,
-                                                        2962,
-                                                        3810,
-                                                        2519
-
-                                                    ]
-                                                },
-                                            ]
-                                        }
-                                        // 使用刚指定的配置项和数据显示图表。
-                                        myChart.setOption(option);
                                     </script>
 
 
                                 </div>
                             </div>
-                            <!--第3个图 核心部分 替换该部分即可-->
-
 
                         </div>
                     </div>
-                    <!-- /# column -->
 
-                    <!--第4个图-->
-                    <div class="row">
-                        <!--第3个图-->
-                        <div class="col-lg-6">
-                            <div class="card alert">
-                                <div class="card-header">
-                                    <h4>游客归属</h4>
-                                    <div class="card-header-right-icon">
-                                        <ul>
-                                            <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
-                                            <li class="card-collapse"><i class="fa fa-window-restore"></i></li>
-                                        </ul>
-                                    </div>
+
+                    <!--                    第4个图-->
+                    <div class="col-lg-6">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>当前月浏览游客来源归属统计</h4>
+                                <div class="card-header-right-icon">
+                                    <ul>
+                                        <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
+                                        <li class="card-collapse"><i class="fa fa-window-restore"></i></li>
+                                    </ul>
                                 </div>
+                            </div>
 
+                            <!--第4个图 核心部分 替换该部分即可-->
+                            <div class="sales-chart  card-content">
+                                <div id="echar4" style="width: 100%; height: 400%; display: block;">
 
-                                <!--第3个图 核心部分 替换该部分即可-->
-                                <div class="sales-chart  card-content">
-                                    <div id="echar4" style="width: 100%; height: 400%; display: block;">
+                                    <script type="text/javascript">
+                                        // 基于准备好的dom，初始化echarts实例
+                                        var myChart4 = echarts.init(document.getElementById('echar4'));
+                                        data = []
+                                        $.ajax(
+                                            {
+                                                url: "/api/getProvinceStatistics",
+                                                type: 'get',
+                                                dataType: 'json',
+                                                success: function (values) {
+                                                    for (var i = 0; i < values.length; i++) {
+                                                        var item = values[i];
+                                                        data.push({'name': item['provinceName'], "value": item['sum']});
+                                                    }
+                                                    var yData = [];
+                                                    var barData = [];
 
-                                        <script type="text/javascript">
-                                            // 基于准备好的dom，初始化echarts实例
-                                            var myChart = echarts.init(document.getElementById('echar4'));
-
-                                            var data = [{
-                                                name: '江苏省',
-                                                value: 5.3
-                                            },
-                                                {
-                                                    name: '北京市',
-                                                    value: 3.8
-                                                },
-                                                {
-                                                    name: '上海',
-                                                    value: 4.6
-                                                },
-                                                {
-                                                    name: '重庆',
-                                                    value: 3.6
-                                                },
-                                                {
-                                                    name: '河北',
-                                                    value: 3.4
-                                                },
-                                                {
-                                                    name: '河南',
-                                                    value: 3.2
-                                                },
-                                                {
-                                                    name: '云南',
-                                                    value: 1.6
-                                                },
-                                                {
-                                                    name: '辽宁',
-                                                    value: 4.3
-                                                },
-                                                {
-                                                    name: '黑龙江',
-                                                    value: 4.1
-                                                },
-                                                {
-                                                    name: '湖南',
-                                                    value: 2.4
-                                                },
-                                                {
-                                                    name: '安徽',
-                                                    value: 3.3
-                                                },
-                                                {
-                                                    name: '山东',
-                                                    value: 3.0
-                                                },
-                                                {
-                                                    name: '新疆',
-                                                    value: 1
-                                                },
-                                                {
-                                                    name: '江苏',
-                                                    value: 3.9
-                                                },
-                                                {
-                                                    name: '浙江',
-                                                    value: 3.5
-                                                },
-                                                {
-                                                    name: '江西',
-                                                    value: 2.0
-                                                },
-                                                {
-                                                    name: '湖北',
-                                                    value: 2.1
-                                                },
-                                                {
-                                                    name: '广西',
-                                                    value: 3.0
-                                                },
-                                                {
-                                                    name: '甘肃',
-                                                    value: 1.2
-                                                },
-                                                {
-                                                    name: '山西',
-                                                    value: 3.2
-                                                },
-                                                {
-                                                    name: '内蒙古',
-                                                    value: 3.5
-                                                },
-                                                {
-                                                    name: '陕西',
-                                                    value: 2.5
-                                                },
-                                                {
-                                                    name: '吉林',
-                                                    value: 4.5
-                                                },
-                                                {
-                                                    name: '福建',
-                                                    value: 2.8
-                                                },
-                                                {
-                                                    name: '贵州',
-                                                    value: 1.8
-                                                },
-                                                {
-                                                    name: '广东',
-                                                    value: 3.7
-                                                },
-                                                {
-                                                    name: '青海',
-                                                    value: 0.6
-                                                },
-                                                {
-                                                    name: '西藏',
-                                                    value: 0.4
-                                                },
-                                                {
-                                                    name: '四川',
-                                                    value: 3.3
-                                                },
-                                                {
-                                                    name: '宁夏',
-                                                    value: 0.8
-                                                },
-                                                {
-                                                    name: '海口',
-                                                    value: 1.9
-                                                },
-                                                {
-                                                    name: '台湾',
-                                                    value: 0.1
-                                                },
-                                                {
-                                                    name: '香港',
-                                                    value: 0.1
-                                                },
-                                                {
-                                                    name: '澳门',
-                                                    value: 0.1
-                                                }
-                                            ];
-
-                                            var yData = [];
-                                            var barData = [];
-
-                                            for (var i = 0; i < 5; i++) {
-                                                barData.push(data[i]);
-                                                yData.push(i + data[i].name);
-                                            }
-
-                                            var option = {
-                                                title: [{
-                                                    show: true,
-                                                    text: '排名情况',
-                                                    textStyle: {
-                                                        color: '#2D3E53',
-                                                        fontSize: 18
-                                                    },
-                                                    right: 180,
-                                                    top: 100
-                                                }],
-                                                tooltip: {
-                                                    show: true,
-                                                    formatter: function (params) {
-                                                        return params.name + '：' + params.data['value'] + '人'
-                                                    },
-                                                },
-                                                visualMap: {
-                                                    type: 'continuous',
-                                                    orient: 'horizontal',
-                                                    itemWidth: 10,
-                                                    itemHeight: 80,
-                                                    text: ['高', '低'],
-                                                    showLabel: true,
-                                                    seriesIndex: [0],
-                                                    min: 0,
-                                                    max: 10,
-                                                    inRange: {
-                                                        color: ['#6FCF6A', '#FFFD64', '#FF5000']
-                                                    },
-                                                    textStyle: {
-                                                        color: '#7B93A7'
-                                                    },
-                                                    bottom: 30,
-                                                    left: 'left',
-                                                },
-                                                grid: {
-                                                    right: 10,
-                                                    top: 135,
-                                                    bottom: 100,
-                                                    width: '20%'
-                                                },
-                                                xAxis: {
-                                                    show: false
-                                                },
-                                                yAxis: {
-                                                    type: 'category',
-                                                    inverse: true,
-                                                    nameGap: 16,
-                                                    axisLine: {
-                                                        show: false,
-                                                        lineStyle: {
-                                                            color: '#ddd'
-                                                        }
-                                                    },
-                                                    axisTick: {
-                                                        show: false,
-                                                        lineStyle: {
-                                                            color: '#ddd'
-                                                        }
-                                                    },
-                                                    axisLabel: {
-                                                        interval: 0,
-                                                        margin: 85,
-                                                        textStyle: {
-                                                            color: '#455A74',
-                                                            align: 'left',
-                                                            fontSize: 14
-                                                        },
-                                                        rich: {
-                                                            a: {
-                                                                color: '#fff',
-                                                                backgroundColor: '#FAAA39',
-                                                                width: 20,
-                                                                height: 20,
-                                                                align: 'center',
-                                                                borderRadius: 2
-                                                            },
-                                                            b: {
-                                                                color: '#fff',
-                                                                backgroundColor: '#4197FD',
-                                                                width: 20,
-                                                                height: 20,
-                                                                align: 'center',
-                                                                borderRadius: 2
-                                                            }
-                                                        },
-                                                        formatter: function (params) {
-                                                            if (parseInt(params.slice(0, 1)) < 3) {
-                                                                return [
-                                                                    '{a|' + (parseInt(params.slice(0, 1)) + 1) + '}' + '  ' + params.slice(1)
-                                                                ].join('\n')
-                                                            } else {
-                                                                return [
-                                                                    '{b|' + (parseInt(params.slice(0, 1)) + 1) + '}' + '  ' + params.slice(1)
-                                                                ].join('\n')
-                                                            }
-                                                        }
-                                                    },
-                                                    data: yData
-                                                },
-                                                geo: {
-                                                    roam: false,
-                                                    map: 'china',
-                                                    left: 'left',
-                                                    right: '300',
-                                                    zoom: 1.0,
-                                                    label: {
-                                                        emphasis: {
-                                                            show: false
-                                                        }
-                                                    },
-                                                    itemStyle: {
-                                                        emphasis: {
-                                                            areaColor: '#fff464'
-                                                        }
+                                                    for (var i = 0; i < 10; i++) {
+                                                        barData.push(data[i]);
+                                                        yData.push(i + data[i].name);
                                                     }
 
-                                                },
-                                                series: [{
-                                                    name: 'mapSer',
-                                                    type: 'map',
-                                                    roam: false,
-                                                    geoIndex: 0,
-                                                    label: {
-                                                        show: false,
-                                                    },
-                                                    data: data
-                                                }, {
-                                                    name: 'barSer',
-                                                    type: 'bar',
-                                                    roam: false,
-                                                    visualMap: false,
-                                                    zlevel: 2,
-                                                    barMaxWidth: 8,
-                                                    barGap: 0,
-                                                    itemStyle: {
-                                                        normal: {
-                                                            color: function (params) {
-                                                                // build a color map as your need.
-                                                                var colorList = [{
-                                                                    colorStops: [{
-                                                                        offset: 0,
-                                                                        color: '#FFD119' // 0% 处的颜色
-                                                                    }, {
-                                                                        offset: 1,
-                                                                        color: '#FFAC4C' // 100% 处的颜色
-                                                                    }]
-                                                                },
-                                                                    {
-                                                                        colorStops: [{
-                                                                            offset: 0,
-                                                                            color: '#00C0FA' // 0% 处的颜色
-                                                                        }, {
-                                                                            offset: 1,
-                                                                            color: '#2F95FA' // 100% 处的颜色
-                                                                        }]
-                                                                    }
-                                                                ];
-                                                                if (params.dataIndex < 3) {
-                                                                    return colorList[0]
-                                                                } else {
-                                                                    return colorList[1]
+                                                    var option = {
+                                                        title: [{
+                                                            show: true,
+                                                            text: '排名情况',
+                                                            textStyle: {
+                                                                color: '#2D3E53',
+                                                                fontSize: 18
+                                                            },
+                                                            right: 180,
+                                                            top: 100
+                                                        }],
+                                                        tooltip: {
+                                                            show: true,
+                                                            formatter: function (params) {
+                                                                return params.name + '：' + params.data['value']
+                                                            },
+                                                        },
+                                                        visualMap: {
+                                                            type: 'continuous',
+                                                            orient: 'horizontal',
+                                                            itemWidth: 10,
+                                                            itemHeight: 80,
+                                                            text: ['高', '低'],
+                                                            showLabel: true,
+                                                            seriesIndex: [0],
+                                                            min: 0,
+                                                            max: 40,
+                                                            inRange: {
+                                                                color: ['#6FCF6A', '#FFFD64', '#FF5000']
+                                                            },
+                                                            textStyle: {
+                                                                color: '#7B93A7'
+                                                            },
+                                                            bottom: 30,
+                                                            left: 'left',
+                                                        },
+                                                        grid: {
+                                                            right: 10,
+                                                            top: 135,
+                                                            bottom: 100,
+                                                            width: '20%'
+                                                        },
+                                                        xAxis: {
+                                                            show: false
+                                                        },
+                                                        yAxis: {
+                                                            type: 'category',
+                                                            inverse: true,
+                                                            nameGap: 16,
+                                                            axisLine: {
+                                                                show: false,
+                                                                lineStyle: {
+                                                                    color: '#ddd'
                                                                 }
                                                             },
-                                                            barBorderRadius: 15
-                                                        }
-                                                    },
-                                                    data: barData
-                                                }]
-                                            };
+                                                            axisTick: {
+                                                                show: false,
+                                                                lineStyle: {
+                                                                    color: '#ddd'
+                                                                }
+                                                            },
+                                                            axisLabel: {
+                                                                interval: 0,
+                                                                margin: 85,
+                                                                textStyle: {
+                                                                    color: '#455A74',
+                                                                    align: 'left',
+                                                                    fontSize: 14
+                                                                },
+                                                                rich: {
+                                                                    a: {
+                                                                        color: '#fff',
+                                                                        backgroundColor: '#FAAA39',
+                                                                        width: 20,
+                                                                        height: 20,
+                                                                        align: 'center',
+                                                                        borderRadius: 2
+                                                                    },
+                                                                    b: {
+                                                                        color: '#fff',
+                                                                        backgroundColor: '#4197FD',
+                                                                        width: 20,
+                                                                        height: 20,
+                                                                        align: 'center',
+                                                                        borderRadius: 2
+                                                                    }
+                                                                },
+                                                                formatter: function (params) {
+                                                                    if (parseInt(params.slice(0, 1)) < 3) {
+                                                                        return [
+                                                                            '{a|' + (parseInt(params.slice(0, 1)) + 1) + '}' + '  ' + params.slice(1)
+                                                                        ].join('\n')
+                                                                    } else {
+                                                                        return [
+                                                                            '{b|' + (parseInt(params.slice(0, 1)) + 1) + '}' + '  ' + params.slice(1)
+                                                                        ].join('\n')
+                                                                    }
+                                                                }
+                                                            },
+                                                            data: yData
+                                                        },
+                                                        geo: {
+                                                            // roam: true,
+                                                            map: 'china',
+                                                            left: 'left',
+                                                            right: '300',
+                                                            // layoutSize: '80%',
+                                                            label: {
+                                                                emphasis: {
+                                                                    show: false
+                                                                }
+                                                            },
+                                                            itemStyle: {
+                                                                emphasis: {
+                                                                    areaColor: '#fff464'
+                                                                }
+                                                            }
+                                                        },
+                                                        series: [{
+                                                            name: 'mapSer',
+                                                            type: 'map',
+                                                            roam: false,
+                                                            geoIndex: 0,
+                                                            label: {
+                                                                show: false,
+                                                            },
+                                                            data: data
+                                                        }, {
+                                                            name: 'barSer',
+                                                            type: 'bar',
+                                                            roam: false,
+                                                            visualMap: false,
+                                                            zlevel: 2,
+                                                            barMaxWidth: 8,
+                                                            barGap: 0,
+                                                            itemStyle: {
+                                                                normal: {
+                                                                    color: function (params) {
+                                                                        // build a color map as your need.
+                                                                        var colorList = [{
+                                                                            colorStops: [{
+                                                                                offset: 0,
+                                                                                color: '#FFD119' // 0% 处的颜色
+                                                                            }, {
+                                                                                offset: 1,
+                                                                                color: '#FFAC4C' // 100% 处的颜色
+                                                                            }]
+                                                                        },
+                                                                            {
+                                                                                colorStops: [{
+                                                                                    offset: 0,
+                                                                                    color: '#00C0FA' // 0% 处的颜色
+                                                                                }, {
+                                                                                    offset: 1,
+                                                                                    color: '#2F95FA' // 100% 处的颜色
+                                                                                }]
+                                                                            }
+                                                                        ];
+                                                                        if (params.dataIndex < 3) {
+                                                                            return colorList[0]
+                                                                        } else {
+                                                                            return colorList[1]
+                                                                        }
+                                                                    },
+                                                                    barBorderRadius: 15
+                                                                }
+                                                            },
+                                                            data: barData
+                                                        }]
+                                                    };
 
-                                            // 使用刚指定的配置项和数据显示图表。
-                                            myChart.setOption(option);
-                                        </script>
+                                                    // 使用刚指定的配置项和数据显示图表。
+                                                    myChart4.setOption(option);
+                                                }
+                                            }
+                                        );
 
 
-                                    </div>
+                                    </script>
                                 </div>
-                                <!--第3个图 核心部分 替换该部分即可-->
-
-
                             </div>
+                            <!-- /# container-fluid -->
                         </div>
-                        <!-- /# column -->
+                        <!-- /# main -->
                     </div>
-
-
-                    <!-- /# column -->
                 </div>
-                <!-- /# row -->     </div>
-            <!-- /# main content -->Copyright &copy; 2019.Company name All rights reserved.<a target="_blank"
-                                                                                              href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a>
+
+            </div>
         </div>
-        <!-- /# container-fluid -->
     </div>
-    <!-- /# main -->
 </div>
+</body>
+
+
 <!-- /# content wrap -->
 <script src="/assets/js/lib/jquery.min.js"></script>
-
 <!-- jquery vendor -->
 <script src="/assets/js/lib/jquery.nanoscroller.min.js"></script>
 <!-- nano scroller -->
@@ -986,6 +892,4 @@
         });
     });
 </script>
-</body>
-
 </html>
