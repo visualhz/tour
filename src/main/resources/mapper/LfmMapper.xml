@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gxu.tour.mapper.LfmMapper" >
+
+    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <select id="getLfmData" resultType="com.gxu.tour.entity.Log" >
+        select *
+        from log
+        where DATE_SUB(CURDATE(),INTERVAL 3 YEAR) &lt;= create_time and product_type='2'
+
+  </select>
+
+    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <select id="getRouteRecById" resultType="com.gxu.tour.entity.Route" >
+        select *
+        from route
+        where route_id = #{routeID}
+  </select>
+
+    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <select id="getRouteByTop" resultType="com.gxu.tour.entity.RouteCount" >
+        select product_id,product_name,count(1) as num
+        from log
+        where product_type=2 and behavior_type=2
+        group by product_id,product_name
+        order by num
+        desc limit 10;
+
+  </select>
+
+</mapper>
