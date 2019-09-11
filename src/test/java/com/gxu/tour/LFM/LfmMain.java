@@ -1,7 +1,9 @@
 package com.gxu.tour.LFM;
 
+import com.gxu.tour.entity.Log;
 import com.gxu.tour.entity.Route;
 import com.gxu.tour.entity.RouteCount;
+import com.gxu.tour.entity.Scene;
 import com.gxu.tour.mapper.LfmMapper;
 import com.gxu.tour.service.LfmService;
 import org.junit.Test;
@@ -34,13 +36,12 @@ public class LfmMain {
     public void getData()
     {
 
-//        String[] datas= lfmService.getRouteRecID("103404");
-//        for(int i=0;i<datas.length;i++)
-//            System.out.println(datas[i].trim());
-        List<Route> list=new ArrayList<Route>();
-        list=lfmService.getRouteByTop();
-        for(Route value:list)
-            System.out.println(value.getRouteName());
+//    List<Log> list=lfmMapper.getSceneData();
+//        System.out.println(list.size());
+
+        List<Scene> list=lfmService.getSceneByTop();
+        for(Scene scene:list)
+            System.out.println(scene.getSceneName());
     }
 
 

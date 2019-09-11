@@ -14,7 +14,7 @@ import java.net.Socket;
  **/
 public class LfmSocket {
 
-    private static Object remoteCall(String content){
+    private static Object remoteCall(String content,int flag){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("content", content);
         String str = jsonObject.toJSONString();
@@ -25,7 +25,10 @@ public class LfmSocket {
         //log.info("调用远程接口:host=>"+HOST+",port=>"+PORT);
         try {
             // 初始化套接字，设置访问服务的主机和进程端口号，HOST是访问python进程的主机名称，可以是IP地址或者域名，PORT是python进程绑定的端口号
-            socket = new Socket("119.23.19.167",12345);
+            if(flag==1)
+                socket = new Socket("119.23.19.167",12345);
+            else if(flag==2)
+                socket = new Socket("119.23.19.167",12346);
             // 获取输出流对象
             OutputStream os = socket.getOutputStream();
             PrintStream out = new PrintStream(os);
@@ -68,11 +71,11 @@ public class LfmSocket {
      * @param
      * @return
      */
-    public  static String getPredict(String content)
+    public  static String getPredict(String content,int flag)
     {
 //        String predict= (String) remoteCall(content).toString().trim()
 //                .replaceAll("\\[","").replaceAll("\\]","");
-        String predict=(String) remoteCall(content).toString().trim();
+        String predict=(String) remoteCall(content,flag).toString().trim();
         return predict;
     }
 

@@ -4,6 +4,7 @@ package com.gxu.tour.mapper;
 import com.gxu.tour.entity.Log;
 import com.gxu.tour.entity.Route;
 import com.gxu.tour.entity.RouteCount;
+import com.gxu.tour.entity.Scene;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +26,13 @@ public interface LfmMapper {
 
     //获取前10的路线组合产品ID和名称
     public List<RouteCount> getRouteByTop();
+
+    //----------分割线，以下是景点推荐的----------------
+    public List<Log> getSceneData();
+
+    //根据路线组合产品ID，获取具体信息
+    public Scene getSceneRecById(@Param("sceneID") String sceneID);
+
+    //获取前10的路线组合产品ID和名称
+    public List<RouteCount> getSceneByTop();
 }

@@ -81,5 +81,46 @@ public class LfmController {
         return  lfmService.getRouteByTop();
     }
 
+    //分割线---------------以下事景点推荐----------------------------------------------------------
+    //把用户的历史日志都写到指定目录，提供给LFM分析
+    @GetMapping("/WScenedata")
+    public ModelAndView WScenedata(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        lfmService.writeSceneData();
+        return  null;
+    }
 
+    //把分析得到的lfm的P,Q矩阵写入本地
+    @GetMapping("/WScenepqData")
+    public ModelAndView WScenepqData(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        lfmService.writeScenePQdata();
+        return  null;
+    }
+
+
+    /**
+     * 获取10个路线组合的推荐产品,根据用户ID
+     * @param request
+     * @return
+     */
+    @GetMapping("/GetRecDataOfScene")
+    @ResponseBody
+    public Object GetRecDataOfScene(HttpServletRequest request, HttpServletResponse response, Model model) {
+//        String userID=request.getParameter("userID");
+        String userID="103404";
+        //首先获取推荐景点ID
+        String[] datas=lfmService.getSceneRecID(userID);
+        return  lfmService.getSceneRecById(datas);
+    }
+
+    //获取10个路线组合的推荐产品,根据热度推荐
+    @GetMapping("/GetRecDataOfSceneByTop")
+    @ResponseBody
+    public Object GetRecDataOfSceneByTop(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+//        String userID=request.getParameter("userID");
+
+        return  lfmService.getSceneByTop();
+    }
 }
