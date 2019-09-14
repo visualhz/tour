@@ -129,7 +129,7 @@
   </select>
 
     <!--**************************************用户浏览日志排行**********************-->
-    <!--获取最近一个月，用户搜索日志表的搜索排行-->
+    <!--获取最近一个月，用户日志表的搜索排行-->
     <select id="getWatchRankData" resultMap="SearchRankMap" >
         select tour_name as search_title ,tour_id,count(1) as num
         from syd_tourshow_watch_log
