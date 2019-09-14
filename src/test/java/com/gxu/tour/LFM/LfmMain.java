@@ -39,7 +39,8 @@ public class LfmMain {
 //    List<Log> list=lfmMapper.getSceneData();
 //        System.out.println(list.size());
 
-        List<Scene> list=lfmService.getSceneByTop();
+        String[] datas=lfmService.getSceneRecID("103404");
+        List<Scene> list=lfmService.getSceneRecById(datas);
         for(Scene scene:list)
             System.out.println(scene.getSceneName());
     }

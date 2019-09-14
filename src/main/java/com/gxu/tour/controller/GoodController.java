@@ -43,7 +43,7 @@ public class GoodController {
      * 逻辑：只统计当前年，和目前月份的之前月份，使用SearchNumByMonth类记载统计结果，然后插入结果表
      */
     @GetMapping("/UpDateSeachByTime")
-    public ModelAndView UpDateSeachByTime(HttpServletRequest request, HttpServletResponse response, Model model)
+    public Object UpDateSeachByTime(HttpServletRequest request, HttpServletResponse response, Model model)
     {
         //创建集合，存储结果类
         List<SearchNumByMonth> sms=new ArrayList<SearchNumByMonth>();
@@ -119,7 +119,7 @@ public class GoodController {
      * 逻辑：只统计当前年，和目前月份的之前月份，使用SearchNumByMonth类记载统计结果，然后插入结果表
      */
     @GetMapping("/UpDateWatchByTime")
-    public ModelAndView UpDateWatchByTime(HttpServletRequest request, HttpServletResponse response, Model model)
+    public Object UpDateWatchByTime(HttpServletRequest request, HttpServletResponse response, Model model)
     {
         //创建集合，存储结果类
         List<SearchNumByMonth> sms=new ArrayList<SearchNumByMonth>();
@@ -213,7 +213,7 @@ public class GoodController {
     //----------------------------------------------------------------------------分割线----------------
     //更新用户搜索日志排行榜
     @GetMapping("/UpdateSearchRankData")
-    public ModelAndView UpdateSearchRankData(HttpServletRequest request, HttpServletResponse response, Model model)
+    public Object UpdateSearchRankData(HttpServletRequest request, HttpServletResponse response, Model model)
     {
         //获取分析数据
         List<Rank> ranks=goodService.getSearchRankData();
