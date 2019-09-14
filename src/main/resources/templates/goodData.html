@@ -64,7 +64,7 @@
         <div class="pull-left">
             <div class="logo">
                 <a href="index.html">
-                    <img id="logoImg" src="/logo/logo.png" data-logo_big="/logo/logo.png" data-logo_small="/logo/logoSmall.png" alt="Nixon" />
+                    <img id="logoImg" src="/logo/logo1.png"  />
                 </a>
             </div>
             <div class="hamburger sidebar-toggle">
@@ -96,8 +96,8 @@
                         <div class="page-header">
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
-                                    <li><a href="#">Dashboard</a></li>
-                                    <li class="active">Home</li>
+
+                                    <li><a href="/Good/DataShow" id="gengxin">更新</a></li>
                                 </ol>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                                     <div class="card-header-right-icon">
                                         <ul>
                                             <!-- <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li> -->
-                                            <li class="card-collapse"><i class="fa fa-window-restore"></i></li>
+                                            <!--<li class="card-collapse"><i class="fa fa-window-restore"></i></li>-->
                                         </ul>
                                     </div>
                                 </div>
@@ -471,6 +471,53 @@
             editTitle: false
         });
     });
+
+
+    $(function(){
+
+        // test 的点击事件
+        $("#gengxin").click(function(){
+
+
+
+            $.ajax({
+                url: '/Good/UpDateSeachByTime',
+                type: 'GET',     // 请求类型，常用的有 GET 和 POST
+                aysc:true,
+                data: {
+                    // 请求参数
+                },
+                success: function (data) { // 接口调用成功回调函数
+                }
+            });
+
+            $.ajax({
+                url: '/Good/UpDateWatchByTime',
+                type: 'GET',     // 请求类型，常用的有 GET 和 POST
+                aysc:true,
+                data: {
+                    // 请求参数
+                },
+                success: function (data) { // 接口调用成功回调函数
+                }
+            });
+        //
+        $.ajax({
+            url: '/Good/UpdateSearchRankData',
+            type: 'GET',     // 请求类型，常用的有 GET 和 POST
+            aysc:true,
+            data: {
+                // 请求参数
+            },
+            success: function (data) { // 接口调用成功回调函数
+            }
+        })
+    });
+    })
+
+
+    //
+
 </script>
 </body>
 
