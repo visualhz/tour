@@ -18,6 +18,20 @@ public class UserAndLogController {
     @Autowired
     UserAndLogServiceImpl userAndLogService;
 
+    // 进行数据更新
+    @RequestMapping("/refreshVisitor")
+    public String refreshVisitor() {
+        try {
+            userAndLogService.updateFMData(userAndLogService.doFMStatistic());
+            userAndLogService.updateUserCityStatistics(userAndLogService.doUserCityStatistics());
+            userAndLogService.updateGenderStatistics(userAndLogService.doGenderStatistics());
+            userAndLogService.updateProvinceStatistics(userAndLogService.doProvinceStatistics());
+        } catch (Exception e) {
+            return "visitor";
+        }
+        return "visitor";
+    }
+
     @RequestMapping("/")
     public String index() {
         return "index";
@@ -29,7 +43,6 @@ public class UserAndLogController {
     public FromTerminal getCurrentFMData() {
         return userAndLogService.getCurrentFMData();
     }
-
 
 
     //更新访问设备来源数据
@@ -59,16 +72,14 @@ public class UserAndLogController {
     //获取当前月份浏览用户来源省份json数据
     @ResponseBody
     @RequestMapping("/api/getProvinceStatistics")
-    public List<Province> getProvinceStatistics()
-    {
+    public List<Province> getProvinceStatistics() {
         return userAndLogService.getProvinceStatistics();
     }
 
 
     //更新当前月份浏览用户来源省份数据
     @RequestMapping("/api/updateProvinceStatistics")
-    public int updateProvinceStatistics()
-    {
+    public int updateProvinceStatistics() {
         return userAndLogService.updateProvinceStatistics(userAndLogService.doProvinceStatistics());
     }
 
@@ -76,32 +87,27 @@ public class UserAndLogController {
     //获取注册用户来源城市统计json数据
     @ResponseBody
     @RequestMapping("/api/getUserCityStatistics")
-    public List<City> getUserCityStatistics()
-    {
+    public List<City> getUserCityStatistics() {
         return userAndLogService.getUserCityStatistics();
     }
 
 
     //更新注册用户来源城市统计数据
     @RequestMapping("/api/updateUserCityStatistics")
-    public int updateUserCityStatistics()
-    {
+    public int updateUserCityStatistics() {
         return userAndLogService.updateUserCityStatistics(userAndLogService.doUserCityStatistics());
     }
 
 
     @RequestMapping("/visitor")
-    public String visitor()
-    {
+    public String visitor() {
         return "visitor";
     }
 
     @RequestMapping("/goodData")
-    public String goodData()
-    {
+    public String goodData() {
         return "goodData";
     }
-
 
 
 }

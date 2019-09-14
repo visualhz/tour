@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <!-- ================= Favicon ================== -->
+    <!-- Standard -->
+    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+    <!-- Retina iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+    <!-- Retina iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+    <!-- Standard iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+    <!-- Standard iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+    <!-- Styles -->
+    <link href="/assets/fontAwesome/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="/assets/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="/assets/css/lib/mmc-chat.css" rel="stylesheet"/>
+    <link href="/assets/css/lib/sidebar.css" rel="stylesheet">
+    <link href="/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/lib/nixon.css" rel="stylesheet">
+    <link href="/assets/lib/lobipanel/css/lobipanel.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <script src="/assets/js/echarts.min.js"></script>
+    <script src="/assets/js/china.js"></script>
+
+    <script src="/assets/js/lib/jquery.min.js"></script>
+    <script src="/assets/js/lib/jquery.nanoscroller.min.js"></script>
+</head>
+
+<body>
+
+<!--左部导航栏-->
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+    <div class="nano">
+        <div class="nano-content">
+
+            <ul>
+
+                <li><a href="/visitor"><i class="ti-user"></i> 游客大数据</a></li>
+                <li><a href="/Good/DataShow"><i class="ti-view-list-alt"></i>产品大数据</a></li>
+                <li><a href="http://localhost:8084/index"><i class="ti-layout-grid2-alt"></i> 路线组合</a></li>
+                <li><a href="http://localhost:8084/keywords"><i class="ti-layout"></i> 景点推荐 </a></li>
+                <li><a href="/register"><i class="ti-plus"></i> 注册用户 </a></li>
+                <li><a href="/resetPSW"><i class="ti-cut"></i> 修改密码 </a></li>
+
+                <li><a href="/logout"><i class="ti-back-right"></i> 退出登录 </a></li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+<!--左部导航栏-->
+<!---->
+
+<!-- /# sidebar -->
+<div class="header">
+
+    <!--左上角图表LOGO-->
+    <div class="pull-left">
+        <div class="logo">
+            <a href="index.html">
+                <img id="logoImg" src="/logo/logo.png" data-logo_big="/logo/logo.png"
+                     data-logo_small="logo/logoSmall.png"
+                     alt="Nixon"/>
+            </a>
+        </div>
+        <div class="hamburger sidebar-toggle">
+            <span class="ti-menu"></span>
+        </div>
+    </div>
+    <!--左上角图表LOGO-->
+    <!---->
+</div>
+<!--头部div-->
+
+<div class="Nixon-login">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-4">
+                <div class="login-content">
+                    <div class="login-form">
+                        <h4>密码修改</h4>
+                        <p style="color: red;" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+                        <form action="/resetPSW" method="post">
+                            <div class="form-group">
+                                <label>用户名</label>
+                                <input name="username" class="form-control" placeholder="用户名">
+                            </div>
+                            <div class="form-group">
+                                <label>原密码</label>
+                                <input type="password" name="oldPassword" class="form-control" placeholder="原密码">
+                            </div>
+                            <div class="form-group">
+                                <label>新密码</label>
+                                <input type="password" name="newPassword1" class="form-control" placeholder="新密码">
+                            </div>
+                            <div class="form-group">
+                                <label>确认新密码</label>
+                                <input type="password" name="newPassword2" class="form-control" placeholder="确认新密码">
+                            </div>
+                            <div class="form-inline">
+                                <button type="submit" class="btn btn-primary btn-flat m-b-10 ">修改</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+<!-- /# content wrap -->
+<script src="/assets/js/lib/jquery.min.js"></script>
+<!-- jquery vendor -->
+<script src="/assets/js/lib/jquery.nanoscroller.min.js"></script>
+<!-- nano scroller -->
+<script src="/assets/js/lib/sidebar.js"></script>
+<!-- sidebar -->
+<script src="/assets/js/lib/bootstrap.min.js"></script>
+<!-- bootstrap -->
+<script src="/assets/js/lib/mmc-common.js"></script>
+<script src="/assets/js/lib/mmc-chat.js"></script>
+<!--  Chart js -->
+<script src="/assets/js/lib/chart-js/Chart.bundle.js"></script>
+<script src="/assets/js/lib/chart-js/chartjs-init.js"></script>
+<!-- // Chart js -->
+<!--  Datamap -->
+<script src="/assets/js/lib/datamap/d3.min.js"></script>
+<script src="/assets/js/lib/datamap/topojson.js"></script>
+<script src="/assets/js/lib/datamap/datamaps.world.min.js"></script>
+<script src="/assets/js/lib/datamap/datamap-init.js"></script>
+<script src="/assets/lib/lobipanel/js/lobipanel.js"></script>
+<!-- // Datamap -->
+<script src="/assets/js/scripts.js"></script>
+<!-- scripit init-->
+<script>
+    $(document).ready(function () {
+        $('#lobipanel-custom-control').lobiPanel({
+            reload: false,
+            close: false,
+            editTitle: false
+        });
+    });
+</script>
+</html>

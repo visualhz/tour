@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxu.tour.mapper.LoginMapper">
+
+    <!--查询数据结果集-->
+    <resultMap id="adminResult" type="Admin">
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="flag" column="flag"/>
+    </resultMap>
+
+    <!--根据用户名查询用户-->
+    <select id="getAdmin" resultMap="adminResult">
+        SELECT * FROM admin WHERE user_name=#{username};
+    </select>
+
+    <!--查询全部用户 -->
+    <select id="getAllAdmin" resultMap="adminResult">
+        SELECT * FROM admin;
+    </select>
+
+    <!--修改用户密码-->
+    <update id="alterAdmin" parameterType="Admin">
+        UPDATE admin SET password=#{user.password} WHERE user_name=#{user.userName};
+    </update>
+
+    <!--插入新用户数据-->
+    <insert id="newAdmin" parameterType="Admin">
+        INSERT INTO admin(user_name, password,flag) VALUES (#{user.userName}, #{user.password}, #{user.flag});
+    </insert>
+</mapper>
