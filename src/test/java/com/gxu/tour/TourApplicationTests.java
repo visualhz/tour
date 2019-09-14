@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.LinkedList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -222,5 +225,21 @@ public class TourApplicationTests {
         userAndLogMapping.updateUserCityStatistics(cities);
 
     }
+
+    @Test
+    public void testStudy()
+    {
+        String s1;
+        StringBuilder s;
+        StringBuffer s2;
+    }
+
+    @Test
+    public void testSha256()
+    {
+
+    }
+
+
 
 }
