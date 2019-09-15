@@ -657,25 +657,25 @@
                                                         var item = values[i];
                                                         data.push({'name': item['provinceName'], "value": item['sum']});
                                                     }
-                                                    var yData = [];
-                                                    var barData = [];
+                                                    // var yData = [];
+                                                    // var barData = [];
 
-                                                    for (var i = 0; i < 10; i++) {
-                                                        barData.push(data[i]);
-                                                        yData.push(i + data[i].name);
-                                                    }
+                                                    // for (var i = 0; i < 10; i++) {
+                                                    //     barData.push(data[i]);
+                                                    //     yData.push(i + data[i].name);
+                                                    // }
 
                                                     var option = {
-                                                        title: [{
-                                                            show: true,
-                                                            text: '排名情况',
-                                                            textStyle: {
-                                                                color: '#2D3E53',
-                                                                fontSize: 18
-                                                            },
-                                                            right: 180,
-                                                            top: 100
-                                                        }],
+                                                        // title: [{
+                                                        //     show: true,
+                                                        //     text: '排名情况',
+                                                        //     textStyle: {
+                                                        //         color: '#2D3E53',
+                                                        //         fontSize: 18
+                                                        //     },
+                                                        //     right: 180,
+                                                        //     top: 100
+                                                        // }],
                                                         tooltip: {
                                                             show: true,
                                                             formatter: function (params) {
@@ -702,7 +702,7 @@
                                                             left: 'left',
                                                         },
                                                         grid: {
-                                                            right: 10,
+                                                            right: 100,
                                                             top: 135,
                                                             bottom: 100,
                                                             width: '20%'
@@ -764,13 +764,13 @@
                                                                     }
                                                                 }
                                                             },
-                                                            data: yData
+                                                            // data: yData
                                                         },
                                                         geo: {
                                                             // roam: true,
                                                             map: 'china',
                                                             left: 'left',
-                                                            right: '300',
+                                                            right: '10',
                                                             // layoutSize: '80%',
                                                             label: {
                                                                 emphasis: {
@@ -832,7 +832,7 @@
                                                                     barBorderRadius: 15
                                                                 }
                                                             },
-                                                            data: barData
+                                                            // data: barData
                                                         }]
                                                     };
 
