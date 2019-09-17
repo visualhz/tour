@@ -105,6 +105,7 @@ public class LoginController {
     public ModelAndView resetPSW() {
         return new ModelAndView("resetPSW");
     }
+
     //修改密码
     @PostMapping("/resetPSW")
     public String resetPSW(@RequestParam("username") String username,
@@ -142,4 +143,10 @@ public class LoginController {
             map.put("msg", "系统出错，修改失败！");
         return "resetPSW";
     }
+
+    @GetMapping("/users")
+    public String getUsers() {
+        return "admin";
+    }
+
 }
