@@ -1,6 +1,7 @@
 package com.gxu.tour.controller;
 
 import com.gxu.tour.entity.Route;
+import com.gxu.tour.entity.Scene;
 import com.gxu.tour.service.LfmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -101,17 +102,23 @@ public class LfmController {
 
     /**
      * 获取10个路线组合的推荐产品,根据用户ID
+     * @param userID 用户名
      * @param request
      * @return
      */
     @GetMapping("/GetRecDataOfScene")
     @ResponseBody
-    public Object GetRecDataOfScene(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public Object GetRecDataOfScene(@RequestParam(value = "userID") String userID,HttpServletRequest request, HttpServletResponse response, Model model) {
 //        String userID=request.getParameter("userID");
-        String userID="103404";
         //首先获取推荐景点ID
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         String[] datas=lfmService.getSceneRecID(userID);
-        return  lfmService.getSceneRecById(datas);
+        List<Scene> scenes = lfmService.getSceneRecById(datas);
+        Map<String,List<Scene>> recommendScenesMap = new HashMap<>();
+        recommendScenesMap.put("scenes",scenes);
+        return  recommendScenesMap;
     }
 
     //获取10个路线组合的推荐产品,根据热度推荐
@@ -120,7 +127,12 @@ public class LfmController {
     public Object GetRecDataOfSceneByTop(HttpServletRequest request, HttpServletResponse response, Model model)
     {
 //        String userID=request.getParameter("userID");
-
-        return  lfmService.getSceneByTop();
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        List<Scene> scenes = lfmService.getSceneByTop();
+        Map<String,List<Scene>> recommendScenesMap = new HashMap<>();
+        recommendScenesMap.put("scenes",scenes);
+        return  recommendScenesMap;
     }
 }
