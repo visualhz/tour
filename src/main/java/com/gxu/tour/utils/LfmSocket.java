@@ -29,6 +29,11 @@ public class LfmSocket {
                 socket = new Socket("119.23.19.167",12345);
             else if(flag==2)
                 socket = new Socket("119.23.19.167",12346);
+//            String name="localhost";
+//            if(flag==1)
+//                socket = new Socket(name,40000);
+//            else if(flag==2)
+//                socket = new Socket(name,40000);
             // 获取输出流对象
             OutputStream os = socket.getOutputStream();
             PrintStream out = new PrintStream(os);

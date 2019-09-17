@@ -49,6 +49,28 @@ public class LfmController {
         return  null;
     }
 
+    //更新数据合并了上述两个步骤，分别是获得日志数据，然后生成P,Q
+    @GetMapping("/UpdateRouteRec")
+    @ResponseBody
+    public Object UpdateRec(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        lfmService.writeDataLfm();
+
+        lfmService.writePQdata();
+
+        lfmService.writeSceneData();
+
+        lfmService.writeScenePQdata();
+
+        return  null;
+    }
+
+    @GetMapping("/gengxin")
+    public ModelAndView gengxin(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        return new ModelAndView("recommend");
+    }
+
     /**
      * 获取10个路线组合的推荐产品,根据用户ID
      * @param userID 用户名
@@ -135,4 +157,7 @@ public class LfmController {
         recommendScenesMap.put("scenes",scenes);
         return  recommendScenesMap;
     }
+
+
+
 }

@@ -27,6 +27,12 @@ public class LoginImpl implements LoginService {
         return loginMapper.getAllAdmin();
     }
 
+    //获取用户的用户名和标识
+    @Override
+    public List<Admin> getNameAndFlag() {
+        return loginMapper.getNameAndFlag();
+    }
+
     //修改用户密码
     @Override
     public int alterAdmin(Admin user) {
@@ -38,6 +44,12 @@ public class LoginImpl implements LoginService {
     public int newAdmin(Admin user) {
 
         return loginMapper.newAdmin(user);
+    }
+
+    //删除用户
+    @Override
+    public int deleteAdmin(String username) {
+        return loginMapper.deleteAdmin(username);
     }
 
 }

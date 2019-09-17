@@ -10,10 +10,18 @@
         <result property="password" column="password"/>
         <result property="flag" column="flag"/>
     </resultMap>
-
+    <!--用户名和标识的结果集-->
+    <resultMap id="userResult" type="Admin">
+        <result property="userName" column="user_name"/>
+        <result property="flag" column="flag"/>
+    </resultMap>
     <!--根据用户名查询用户-->
     <select id="getAdmin" resultMap="adminResult">
         SELECT * FROM admin WHERE user_name=#{username};
+    </select>
+    <!--查询全部用户的用户名和标识-->
+    <select id="getNameAndFlag" resultMap="userResult">
+        SELECT user_name, flag FROM admin;
     </select>
 
     <!--查询全部用户 -->
@@ -30,4 +38,10 @@
     <insert id="newAdmin" parameterType="Admin">
         INSERT INTO admin(user_name, password,flag) VALUES (#{user.userName}, #{user.password}, #{user.flag});
     </insert>
+
+    <!--删除用户 -->
+    <delete id="deleteAdmin" parameterType="String">
+        DELETE FROM admin WHERE user_name=#{username};
+    </delete>
+
 </mapper>

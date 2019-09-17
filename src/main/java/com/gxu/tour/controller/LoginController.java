@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -21,7 +23,11 @@ public class LoginController {
 
     //登录
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpSession session, HttpServletRequest request) {
+        Admin loginUser = (Admin) session.getAttribute("loginUser");
+        if (loginUser != null) {
+            return "visitor";
+        }
         return "login";
     }
 
@@ -105,6 +111,7 @@ public class LoginController {
     public ModelAndView resetPSW() {
         return new ModelAndView("resetPSW");
     }
+
     //修改密码
     @PostMapping("/resetPSW")
     public String resetPSW(@RequestParam("username") String username,
@@ -141,5 +148,33 @@ public class LoginController {
         else
             map.put("msg", "系统出错，修改失败！");
         return "resetPSW";
+    }
+
+    //获取全部用户，只能是超级管理员admin控制
+    @GetMapping("/users")
+    public String getUsers(Map<String, Object> map, HttpSession session) {
+        Admin loginUser = (Admin) session.getAttribute("loginUser");
+        if (!(loginUser.getUserName().equals("admin"))) {
+            map.put("msg", "你不是超级管理员，无权查看全部用户");
+            return "admin";
+        }
+        List<Admin> allAdmin = loginService.getNameAndFlag();
+        map.put("allAdmin", allAdmin);
+        return "admin";
+    }
+
+    //删除用户
+    @PostMapping("/deleteUser")
+    public String getAllUsers(@RequestParam("userName") String userName,
+                              @RequestParam("flag") int flag,
+                              HttpSession session) {
+        Admin loginUser = (Admin) session.getAttribute("loginUser");
+        if (!(loginUser.getUserName().equals("admin")))
+            return "redirect:/users";
+        try {
+            loginService.deleteAdmin(userName);
+        } catch (Exception e) {
+        }
+        return "redirect:/users";
     }
 }
