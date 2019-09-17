@@ -157,7 +157,5 @@ public class LfmController {
         recommendScenesMap.put("scenes",scenes);
         return  recommendScenesMap;
     }
-
-
-
+    
 }
