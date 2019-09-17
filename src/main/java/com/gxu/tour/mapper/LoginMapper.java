@@ -14,11 +14,17 @@ public interface LoginMapper {
     //获取全部用户
     public List<Admin> getAllAdmin();
 
+    //返回用户的用户名和标识
+    public List<Admin> getNameAndFlag();
+
     //修改用户密码
     public int alterAdmin(@Param("user") Admin user);
 
     //注册用户
     public int newAdmin(@Param("user") Admin user);
+
+    //删除用户
+    public int deleteAdmin(@Param("username") String username);
 
 
 }

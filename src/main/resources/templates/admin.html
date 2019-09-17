@@ -44,9 +44,8 @@
 
                 <li><a href="/visitor"><i class="ti-user"></i> 游客大数据</a></li>
                 <li><a href="/Good/DataShow"><i class="ti-view-list-alt"></i>产品大数据</a></li>
-                <li><a href="http://localhost:8084/index"><i class="ti-layout-grid2-alt"></i> 路线组合</a></li>
-                <li><a href="http://localhost:8084/keywords"><i class="ti-layout"></i> 景点推荐 </a></li>
                 <li><a href="/register"><i class="ti-plus"></i> 注册用户 </a></li>
+                <li><a href="/users"><i class="ti-face-smile"></i> 全部用户 </a></li>
                 <li><a href="/resetPSW"><i class="ti-cut"></i> 修改密码 </a></li>
                 <li><a href="/logout"><i class="ti-back-right"></i> 退出登录 </a></li>
             </ul>
@@ -82,21 +81,30 @@
             <div class="col-lg-10 col-lg-offset-2 ">
                 <div class="login-content">
                     <div class="login-form">
-                        <table class="table table-hover">
+
+                        <table class="table table-hover table-bordered">
                             <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>用户名</th>
-                                <th>操作</th>
+                            <tr >
+                                <th class="text-dark">序号</th>
+                                <th class="text-dark">用户名</th>
+                                <th class="text-dark">用户标识</th>
+                                <th class="text-dark">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>haha</td>
+                            <p th:text="${msg}"/>
+                            <tr th:each="admin,adminStat : ${allAdmin}">
+                                <td th:text="${adminStat.count}" scope="row"/>
+                                <td th:text="${admin.userName}"/>
+
+                                <td th:if="${admin.flag} eq 1">超级管理员</td>
+                                <td th:if="${admin.flag} eq 0">普通管理员</td>
                                 <td>
-                                    <form action="/getAllUser">
-                                        <button type="submit">删除</button>
+                                    <form action="/deleteUser" method="post">
+                                        <input type="text" th:value="${admin.userName}" name="userName" hidden>
+                                        <input type="text" th:value="${admin.flag}" name="flag" hidden>
+                                        <input type="submit" th:if="${admin.flag} eq 0" value="删除">
+                                        <label th:if="${admin.flag} eq 1">不允许删除</label>
                                     </form>
                                 </td>
                             </tr>
