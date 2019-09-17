@@ -16,7 +16,7 @@ import java.util.List;
 public interface LfmService {
 
     //把路线组合产品浏览日志写到本地
-    public void writeDataLfm();
+    public int writeDataLfm();
 
     //把P,Q矩阵写到本地
     public String writePQdata();
@@ -32,7 +32,7 @@ public interface LfmService {
 
     //-----------分割线，以下是景点推荐的
     //把景点产品浏览日志写到本地
-    public void writeSceneData();
+    public int writeSceneData();
 
     //把P,Q矩阵写到本地
     public String writeScenePQdata();

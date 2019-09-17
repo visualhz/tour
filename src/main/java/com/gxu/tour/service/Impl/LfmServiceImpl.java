@@ -31,12 +31,13 @@ public class LfmServiceImpl implements LfmService {
 
     //把路线组合产品浏览日志写到本地
     @Override
-    public void writeDataLfm() {
+    public int writeDataLfm() {
 
         //获取路线组合产品数据
         List<Log> datas=lfmMapper.getLfmData();
         //需要数据格式 user_id、product_id 、product_type 、product_name
-        String filename="F:\\推荐算法\\datas\\route.csv";
+//        String filename="F:\\推荐算法\\datas\\route.csv";
+        String filename="/home/hadoop/datas/hqgl/testdata/route.csv";
 
         //判断文件是否存在，存在则删除
         File file=new File(filename);
@@ -49,7 +50,7 @@ public class LfmServiceImpl implements LfmService {
                     +','+datas.get(i).getProductName();
             method1(filename,content);
         }
-
+        return 1;
     }
 
     //把P,Q矩阵写到本地,1为路线组合
@@ -120,11 +121,11 @@ public class LfmServiceImpl implements LfmService {
     //-----------分割线，以下是景点推荐的-------------------------------
     //把景点产品浏览日志写到本地
     @Override
-    public void writeSceneData() {
+    public int writeSceneData() {
         List<Log> datas=lfmMapper.getSceneData();
         //需要数据格式 user_id、product_id 、product_type 、product_name
-        String filename="F:\\推荐算法\\datas\\scene.csv";
-
+//        String filename="F:\\推荐算法\\datas\\scene.csv";
+        String filename="/home/hadoop/datas/hqgl/testdata/scene.csv";
         //判断文件是否存在，存在则删除
         File file=new File(filename);
         if(file.exists())
@@ -136,6 +137,8 @@ public class LfmServiceImpl implements LfmService {
                     +','+datas.get(i).getProductName();
             method1(filename,content);
         }
+
+        return 1;
     }
 
     //把P,Q矩阵写到本地,景点推荐
