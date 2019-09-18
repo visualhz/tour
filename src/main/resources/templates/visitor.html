@@ -63,7 +63,7 @@
     <div class="pull-left">
         <div class="logo">
             <a href="index.html">
-                <img id="logoImg" src="/logo/logo1.png"  />
+                <img id="logoImg" src="/logo/logo1.png"/>
             </a>
         </div>
         <div class="hamburger sidebar-toggle">
@@ -97,7 +97,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
 
-                                <li><a href="/refreshVisitor">更新</a> </li>
+                                <li><a href="/refreshVisitor">更新</a></li>
                             </ol>
                         </div>
                     </div>
@@ -136,6 +136,8 @@
                                             success: function (data) {
                                                 var year = data['year'];
                                                 var month = data['month'];
+                                                var total = 0;
+                                                total += data['pc'] + data['mp'] + data['im'];
                                                 datas.push({'name': "PC", "value": data['pc']});
                                                 datas.push({'name': "小程序", "value": data['mp']});
                                                 datas.push({'name': "一体机", 'value': data['im']});
@@ -234,69 +236,46 @@
                                                             }
                                                         },
                                                         data: [{
-                                                            name: '',
-                                                            value: 0,
+                                                            name: '总数',
+                                                            value: total,
                                                             itemStyle: {
                                                                 normal: {
                                                                     color: "#0B4A6B"
                                                                 }
                                                             }
                                                         }]
-                                                    }, {
-                                                        type: 'pie',
-                                                        radius: ["90%", "95%"],
-                                                        hoverAnimation: false,
-                                                        labelLine: {
-                                                            normal: {
-                                                                show: false,
-                                                                length: 30,
-                                                                length2: 55
-                                                            },
-                                                            emphasis: {
-                                                                show: false
-                                                            }
-                                                        },
-                                                        name: "",
-                                                        data: [{
-                                                            name: '',
-                                                            value: 0,
-                                                            itemStyle: {
+                                                    },
+                                                        {
+                                                            stack: 'a',
+                                                            type: 'pie',
+                                                            radius: ['20%', '90%'],
+                                                            roseType: 'area',
+                                                            zlevel: 10,
+                                                            label: {
                                                                 normal: {
-                                                                    color: "#0B4A6B"
-                                                                }
-                                                            }
-                                                        }]
-                                                    }, {
-                                                        stack: 'a',
-                                                        type: 'pie',
-                                                        radius: ['20%', '80%'],
-                                                        roseType: 'area',
-                                                        zlevel: 10,
-                                                        label: {
-                                                            normal: {
-                                                                show: true,
-                                                                formatter: "{c}",
-                                                                textStyle: {
-                                                                    fontSize: 12,
+                                                                    show: true,
+                                                                    formatter: "{c}",
+                                                                    textStyle: {
+                                                                        fontSize: 15,
+                                                                    },
+                                                                    position: 'outside'
                                                                 },
-                                                                position: 'outside'
+                                                                emphasis: {
+                                                                    show: true
+                                                                }
                                                             },
-                                                            emphasis: {
-                                                                show: true
-                                                            }
-                                                        },
-                                                        labelLine: {
-                                                            normal: {
-                                                                show: true,
-                                                                length: 20,
-                                                                length2: 55
+                                                            labelLine: {
+                                                                normal: {
+                                                                    show: true,
+                                                                    length: 10,
+                                                                    length2: 10
+                                                                },
+                                                                emphasis: {
+                                                                    show: false
+                                                                }
                                                             },
-                                                            emphasis: {
-                                                                show: false
-                                                            }
-                                                        },
-                                                        data: datas,
-                                                    },]
+                                                            data: datas,
+                                                        },]
                                                 }
                                                 myChart1.setOption(option);
                                             }
