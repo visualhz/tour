@@ -14,6 +14,10 @@ public class MvcConfig implements WebMvcConfigurer {
         addInterceptor.excludePathPatterns("/assets/**");
         addInterceptor.excludePathPatterns("/login");
         addInterceptor.excludePathPatterns("/loginCheck");
+        addInterceptor.excludePathPatterns("/Lfm/GetRecDataOfRoute");
+        addInterceptor.excludePathPatterns("/Lfm/GetRecDataOfRouteByTop");
+        addInterceptor.excludePathPatterns("/Lfm/GetRecDataOfScene");
+        addInterceptor.excludePathPatterns("/Lfm/GetRecDataOfSceneByTop");
         addInterceptor.addPathPatterns("/**");
     }
 }
