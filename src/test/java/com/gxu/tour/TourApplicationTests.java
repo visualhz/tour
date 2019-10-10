@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
-
+//mvn clean install -DskipTests
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TourApplicationTests {
