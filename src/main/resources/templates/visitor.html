@@ -63,7 +63,7 @@
     <div class="pull-left">
         <div class="logo">
             <a href="#">
-                <img id="logoImg" src="/logo/logo2.png"  />
+                <img id="logoImg" src="/logo/logo2.png"/>
             </a>
         </div>
         <div class="hamburger sidebar-toggle">
@@ -97,7 +97,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
 
-                                <li><a href="/refreshVisitor">更新</a> </li>
+                                <li><a href="/refreshVisitor">更新</a></li>
                             </ol>
                         </div>
                     </div>
@@ -243,7 +243,7 @@
                                                                 }
                                                             }
                                                         }]
-                                                    },  {
+                                                    }, {
                                                         stack: 'a',
                                                         type: 'pie',
                                                         radius: ['20%', '90%'],
@@ -568,6 +568,7 @@
                                                         ]
                                                     }
 
+                                                    myChart3.resize();
                                                     // 使用刚指定的配置项和数据显示图表。
                                                     myChart3.setOption(option);
 
@@ -614,25 +615,7 @@
                                                         var item = values[i];
                                                         data.push({'name': item['provinceName'], "value": item['sum']});
                                                     }
-                                                    // var yData = [];
-                                                    // var barData = [];
-
-                                                    // for (var i = 0; i < 10; i++) {
-                                                    //     barData.push(data[i]);
-                                                    //     yData.push(i + data[i].name);
-                                                    // }
-
                                                     var option = {
-                                                        // title: [{
-                                                        //     show: true,
-                                                        //     text: '排名情况',
-                                                        //     textStyle: {
-                                                        //         color: '#2D3E53',
-                                                        //         fontSize: 18
-                                                        //     },
-                                                        //     right: 180,
-                                                        //     top: 100
-                                                        // }],
                                                         tooltip: {
                                                             show: true,
                                                             formatter: function (params) {
@@ -660,9 +643,9 @@
                                                         },
                                                         grid: {
                                                             right: 100,
-                                                            top: 135,
-                                                            bottom: 100,
-                                                            width: '20%'
+                                                            width: '20%',
+                                                            top: 10,
+                                                            bottom: "10%",
                                                         },
                                                         xAxis: {
                                                             show: false
@@ -726,9 +709,11 @@
                                                         geo: {
                                                             // roam: true,
                                                             map: 'china',
-                                                            left: 'left',
+                                                            left: '20',
                                                             right: '10',
-                                                            // layoutSize: '80%',
+                                                            top:"10",
+                                                            bottom:"10",
+                                                            layoutSize: '80%',
                                                             label: {
                                                                 emphasis: {
                                                                     show: false
@@ -792,7 +777,7 @@
                                                             // data: barData
                                                         }]
                                                     };
-
+                                                    myChart4.resize();
                                                     // 使用刚指定的配置项和数据显示图表。
                                                     myChart4.setOption(option);
                                                 }
