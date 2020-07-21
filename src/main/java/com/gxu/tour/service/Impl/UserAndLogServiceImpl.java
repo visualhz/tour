@@ -75,6 +75,7 @@ public class UserAndLogServiceImpl implements UserAndLogService {
         int month = calendar.get(Calendar.MONTH);
         //返回数据的数目
         int size = 0;
+        boolean isExisit = false;
         List<Gender> genders = userAndLogMapping.doGenderStatistics();
 
         //若无最近一年统计数据，则返回最近一年的数据都为0
@@ -86,19 +87,18 @@ public class UserAndLogServiceImpl implements UserAndLogService {
         }
         size = genders.size();
         //若返回的数据不足12个月，则补足12条数据
-        if (size < 12) {
-            year = genders.get((size - 1)).getYear();
-            month = genders.get(size - 1).getMonth();
-            calendar.set(year, month, 1);
-            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-
-            for (int i = 0; i < 12 - size; i++) {
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                genders.add(new Gender((size + i + 1), year, month + 1, 0, 0, 0));
-                calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
-            }
+        for (int i = 0; i < 12; i++) {
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            isExisit = false;
+            for (Gender gender : genders)
+                if (year == gender.getYear() && (month + 1) == gender.getMonth()) {
+                    isExisit = true;
+                    break;
+                }
+            if (!isExisit)
+                genders.add(new Gender((++size), year, month + 1, 0, 0, 0));
+            calendar.add(Calendar.MONTH, -1);
         }
         return genders;
     }

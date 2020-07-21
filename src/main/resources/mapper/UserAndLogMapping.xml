@@ -62,7 +62,7 @@
         UPDATE from_terminal_result SET
         year=#{data.year},
         month=#{data.month},
-        PC=#{data.PC},
+            PC=#{data.PC},
         MP=#{data.MP},
         IM=#{data.IM}
         WHERE id = 1;
@@ -78,11 +78,11 @@
     <!--  进行性别数据统计  -->
     <select id="doGenderStatistics" resultMap="genderResult">
     SET @id=0;
-    SELECT @id:=@id +1 AS id , SUM(IF(sex=1,1,0)) AS man_num, SUM(IF(sex=0,1,0)) AS women_num,COUNT(*) total,
-    year, month FROM (SELECT sex, a.`uid` AS 'auid', b.uid AS 'buid', b.year, b.month FROM `syd_tourshow_user` a
-    INNER JOIN(SELECT uid, MAX(YEAR(create_time)) AS 'year',MAX(MONTH(create_time)) AS 'month'
-    FROM `syd_tourshow_watch_log` GROUP BY uid) b ON a.`uid` = b.uid) c
-    GROUP BY year, month ORDER BY year DESC, month DESC LIMIT 0, 12;
+    SELECT @id:=@id +1 AS id , SUM(IF(a.sex=1,1,0)) AS man_num, SUM(IF(a.sex=0,1,0)) AS women_num,COUNT(*) total, b.year AS YEAR, b.month AS MONTH
+    FROM `syd_tourshow_user` a
+    INNER JOIN
+    (SELECT uid, YEAR(create_time) AS 'year', MONTH(create_time) AS 'month' FROM `syd_tourshow_watch_log` a WHERE create_time > DATE_SUB(NOW(), INTERVAL 12 MONTH)) b
+    ON a.`uid`= b.uid  GROUP BY b.year, b.month ORDER BY b.year DESC, b.month DESC LIMIT 0,12;
     </select>
 
     <!--  更新性别统计数据保存表  -->

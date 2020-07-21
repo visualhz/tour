@@ -4,6 +4,8 @@ package com.gxu.tour;
 import com.gxu.tour.entity.*;
 import com.gxu.tour.mapper.GoodMapper;
 import com.gxu.tour.mapper.UserAndLogMapping;
+import com.gxu.tour.service.Impl.UserAndLogServiceImpl;
+import com.gxu.tour.service.UserAndLogService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,7 +239,7 @@ public class TourApplicationTests {
     @Test
     public void testSha256()
     {
-
+        System.out.println(userAndLogMapping.doGenderStatistics());
     }
 
 
