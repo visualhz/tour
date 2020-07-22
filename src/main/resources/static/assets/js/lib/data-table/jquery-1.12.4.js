@@ -1084,7 +1084,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	documentIsHTML = !isXML( document );
 
 	// Support: IE 9-11, Edge
-	// Accessing iframe documents after unload throws "permission denied" errors (jQuery #13936)
+	// Accessing iframe documents after unload throws "permission denied" error (jQuery #13936)
 	if ( (parent = document.defaultView) && parent.top !== parent ) {
 		// Support: IE 11
 		if ( parent.addEventListener ) {
@@ -7130,7 +7130,7 @@ jQuery.extend( {
 				( value = hooks.set( elem, value, extra ) ) !== undefined ) {
 
 				// Support: IE
-				// Swallow errors from 'invalid' CSS values (#5509)
+				// Swallow error from 'invalid' CSS values (#5509)
 				try {
 					style[ name ] = value;
 				} catch ( e ) {}
@@ -7285,7 +7285,7 @@ jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
 				// Support: IE<=11+
 				// Running getBoundingClientRect on a disconnected node in IE throws an error
 				// Support: IE8 only
-				// getClientRects() errors on disconnected elems
+				// getClientRects() error on disconnected elems
 				( jQuery.contains( elem.ownerDocument, elem ) ?
 					elem.getBoundingClientRect().left -
 						swap( elem, { marginLeft: 0 }, function() {
@@ -9327,7 +9327,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 				// Apply converter (if not an equivalence)
 				if ( conv !== true ) {
 
-					// Unless errors are allowed to bubble, catch and return them
+					// Unless error are allowed to bubble, catch and return them
 					if ( conv && s[ "throws" ] ) { // jscs:ignore requireDotNotation
 						response = conv( response );
 					} else {
@@ -10627,7 +10627,7 @@ jQuery.fn.load = function( url, params, callback ) {
 			self.html( selector ?
 
 				// If a selector was specified, locate the right elements in a dummy div
-				// Exclude scripts to avoid IE 'Permission Denied' errors
+				// Exclude scripts to avoid IE 'Permission Denied' error
 				jQuery( "<div>" ).append( jQuery.parseHTML( responseText ) ).find( selector ) :
 
 				// Otherwise use the full result
