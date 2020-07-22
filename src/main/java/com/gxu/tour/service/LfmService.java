@@ -21,8 +21,14 @@ public interface LfmService {
     //把P,Q矩阵写到本地
     public String writePQdata();
 
-    //获取推荐产品
+    //实时获取推荐产品
     public String[] getRouteRecID(String userid);
+
+    //离线获取推荐产品
+    public String[] getRouteRecID_off(String userid);
+
+    //更新离线产品
+    public String updateRouteRecID_off(String userid);
 
     //根据推荐的路线组合产品ID，去获取具体信息
     public List<Route> getRouteRecById(String[] dataID);
@@ -37,8 +43,14 @@ public interface LfmService {
     //把P,Q矩阵写到本地
     public String writeScenePQdata();
 
-    //获取推荐产品,景点推荐
+    //实时获取推荐产品,景点推荐
     public String[] getSceneRecID(String userid);
+
+    //离线获取推荐产品,景点推荐
+    public String[] getSceneRecID_off(String userid);
+
+    //更新离线,景点推荐
+    public String updateSceneRecID_off(String userid);
 
     //根据推荐的路线组合产品ID，去获取具体信息
     public List<Scene> getSceneRecById(String[] dataID);

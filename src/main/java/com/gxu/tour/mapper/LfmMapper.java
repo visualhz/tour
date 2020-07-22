@@ -24,6 +24,15 @@ public interface LfmMapper {
     //根据路线组合产品ID，获取具体信息
     public Route getRouteRecById(@Param("routeID") String routeID);
 
+    //获取离线产品id
+    public String getRouteRecById_off(@Param("user_id") String user_id);
+
+    //插入离线产品表
+    public int insertRoute_off(@Param("user_id") String user_id,@Param("recommend") String recommend);
+
+    //更新离线产品表
+    public int updatetRoute_off(@Param("user_id") String user_id,@Param("recommend") String recommend);
+
     //获取前10的路线组合产品ID和名称
     public List<RouteCount> getRouteByTop();
 
@@ -32,6 +41,15 @@ public interface LfmMapper {
 
     //根据路线组合产品ID，获取具体信息
     public Scene getSceneRecById(@Param("sceneID") String sceneID);
+
+    //离线景点
+    public String getSceneRecById_off(@Param("user_id") String user_id);
+
+    //插入离线景点表
+    public int insertScene_off(@Param("user_id") String user_id,@Param("recommend") String recommend);
+
+    //更新离线景点表
+    public int updatetScene_off(@Param("user_id") String user_id,@Param("recommend") String recommend);
 
     //获取前10的路线组合产品ID和名称
     public List<RouteCount> getSceneByTop();

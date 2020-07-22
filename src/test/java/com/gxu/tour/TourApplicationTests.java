@@ -4,6 +4,7 @@ package com.gxu.tour;
 import com.gxu.tour.entity.*;
 import com.gxu.tour.mapper.GoodMapper;
 import com.gxu.tour.mapper.UserAndLogMapping;
+import com.gxu.tour.service.LfmService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class TourApplicationTests {
 
     @Autowired
     private GoodMapper mapper;
+
+    @Autowired
+    private LfmService lfmService;
 
     //测试时间查询
     @Test
@@ -237,7 +241,7 @@ public class TourApplicationTests {
     @Test
     public void testSha256()
     {
-
+        lfmService.updateRouteRecID_off("100009");
     }
 
 

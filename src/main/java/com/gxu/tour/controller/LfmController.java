@@ -72,7 +72,7 @@ public class LfmController {
     }
 
     /**
-     * 获取10个路线组合的推荐产品,根据用户ID
+     * 离线获取
      * @param userID 用户名
      * @param request
      * @return
@@ -87,7 +87,8 @@ public class LfmController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        String[] productId = lfmService.getRouteRecID(userID);
+        String[] productId = lfmService.getRouteRecID_off(userID);
+
         List<Route> routes = lfmService.getRouteRecById(productId);
         Map<String,List<Route>> recommendRotesMap = new HashMap<>();
         recommendRotesMap.put("routes",routes);
@@ -103,6 +104,18 @@ public class LfmController {
 
         return  lfmService.getRouteByTop();
     }
+
+    //更新推荐结果
+    @GetMapping("/updateRecDataOfRouteByID_off")
+    @ResponseBody
+    public String uodateRecDataOfRouteByID(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        String userID=request.getParameter("userID");
+
+        return lfmService.updateRouteRecID_off(userID);
+    }
+
+
 
     //分割线---------------以下事景点推荐----------------------------------------------------------
     //把用户的历史日志都写到指定目录，提供给LFM分析
@@ -136,7 +149,8 @@ public class LfmController {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        String[] datas=lfmService.getSceneRecID(userID);
+        String[] datas=lfmService.getSceneRecID_off(userID);
+
         List<Scene> scenes = lfmService.getSceneRecById(datas);
         Map<String,List<Scene>> recommendScenesMap = new HashMap<>();
         recommendScenesMap.put("scenes",scenes);
@@ -157,5 +171,16 @@ public class LfmController {
         recommendScenesMap.put("scenes",scenes);
         return  recommendScenesMap;
     }
-    
+
+    //更新推荐结果
+    @GetMapping("/updateRecDataOfSceneByID_off")
+    @ResponseBody
+    public String uodateRecDataOfSceneByID(HttpServletRequest request, HttpServletResponse response, Model model)
+    {
+        String userID=request.getParameter("userID");
+
+        return lfmService.updateSceneRecID_off(userID);
+    }
+
+
 }

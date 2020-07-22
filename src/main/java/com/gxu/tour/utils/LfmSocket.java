@@ -15,6 +15,7 @@ import java.net.Socket;
 public class LfmSocket {
 
     private static Object remoteCall(String content,int flag){
+//        System.setProperty("java.net.preferIPv4Stack", "false");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("content", content);
         String str = jsonObject.toJSONString();
@@ -26,9 +27,12 @@ public class LfmSocket {
         try {
             // 初始化套接字，设置访问服务的主机和进程端口号，HOST是访问python进程的主机名称，可以是IP地址或者域名，PORT是python进程绑定的端口号
             if(flag==1)
-                socket = new Socket("119.23.19.167",12345);
+                socket = new Socket("47.92.54.173",12345);
+
+//                socket = new Socket("2001:da8:270:2020:f816:3eff:fe83:568b",5900);
             else if(flag==2)
-                socket = new Socket("119.23.19.167",12346);
+                socket = new Socket("47.92.54.173",12346);
+//                socket = new Socket("2001:da8:270:2020:f816:3eff:fe83:568b",5901);
 //            String name="localhost";
 //            if(flag==1)
 //                socket = new Socket(name,40000);

@@ -69,6 +69,32 @@ public class LfmServiceImpl implements LfmService {
         return datas;
     }
 
+    //获取离线产品
+    @Override
+    public String[] getRouteRecID_off(String userid) {
+        String[] datas=lfmMapper.getRouteRecById_off(userid).replaceAll("\\[","").replaceAll("\\]","").split(",");
+
+        return datas;
+    }
+
+    //更新离线产品
+    @Override
+    public String updateRouteRecID_off(String userid) {
+        String recommend=LfmSocket.getPredict(userid,1).trim();
+        //首先判断表中是否记录有这个用户信息
+        String old_recommend=lfmMapper.getRouteRecById_off(userid);
+        //如果为空，就插入
+        if(old_recommend==null)
+        {
+            lfmMapper.insertRoute_off(userid,recommend);
+        }
+        else {
+            //否则更新
+            lfmMapper.updatetRoute_off(userid,recommend);
+        }
+        return "success!";
+    }
+
     //根据推荐的路线组合产品ID，去获取具体信息
     @Override
     public List<Route> getRouteRecById(String[] dataID) {
@@ -155,6 +181,32 @@ public class LfmServiceImpl implements LfmService {
         String[] datas=LfmSocket.getPredict(userid,2).trim().replaceAll("\\[","").replaceAll("\\]","").split(",");
 
         return datas;
+    }
+
+    //获取离线获取景点，查数据库
+    @Override
+    public String[] getSceneRecID_off(String userid) {
+        String[] datas=lfmMapper.getSceneRecById_off(userid).replaceAll("\\[","").replaceAll("\\]","").split(",");
+
+        return datas;
+    }
+
+    //更新离线产品
+    @Override
+    public String updateSceneRecID_off(String userid) {
+        String recommend=LfmSocket.getPredict(userid,2).trim();
+        //首先判断表中是否记录有这个用户信息
+        String old_recommend=lfmMapper.getSceneRecById_off(userid);
+        //如果为空，就插入
+        if(old_recommend==null)
+        {
+            lfmMapper.insertScene_off(userid,recommend);
+        }
+        else {
+            //否则更新
+            lfmMapper.updatetScene_off(userid,recommend);
+        }
+        return "success!";
     }
 
     //根据推荐的路线组合产品ID，去获取具体信息

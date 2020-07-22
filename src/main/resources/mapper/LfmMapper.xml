@@ -27,6 +27,28 @@
 
   </select>
 
+    <!--离线获取路线产品-->
+    <select id="getRouteRecById_off" resultType="java.lang.String" >
+      	 select recommend
+      	 from recommend_route
+      	 where user_id = #{user_id}
+    </select>
+
+    <!--插入离线产品表-->
+    <insert id="insertRoute_off">
+        insert into recommend_route(user_id,recommend)
+        values(#{user_id},#{recommend})
+    </insert>
+
+    <!--更新离线产品表-->
+    <update id="updatetRoute_off" parameterType="java.lang.String" >
+        update  recommend_route
+        <set>
+          recommend=#{recommend}
+        </set>
+        where  user_id=#{user_id}
+    </update>
+
     <!--//////////////分割线，以下是景点推荐///////////////////////////-->
     <!--获取用户日志,景点推荐-->
     <select id="getSceneData" resultType="com.gxu.tour.entity.Log" >
@@ -52,4 +74,28 @@
         desc limit 10;
 
   </select>
+
+
+    <!--离线获取景区产-->
+    <select id="getSceneRecById_off" resultType="string" >
+      	 select recommend
+      	 from recommend_scene
+      	 where user_id = #{user_id}
+    </select>
+
+    <!--插入离线景点表-->
+    <insert id="insertScene_off">
+        insert into recommend_scene(user_id,recommend)
+        values(#{user_id},#{recommend})
+    </insert>
+
+    <!--更新离线景点表-->
+    <update id="updatetScene_off" parameterType="java.lang.String" >
+        update  recommend_scene
+        <set>
+            recommend=#{recommend}
+        </set>
+        where  user_id=#{user_id}
+    </update>
+
 </mapper>
